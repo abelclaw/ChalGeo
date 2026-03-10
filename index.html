@@ -846,20 +846,6 @@
             color: #e2e8f0;
             font-size: 0.9rem;
         }
-        .review-back-btn {
-            background: #334155;
-            color: #e2e8f0;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-bottom: 16px;
-        }
-        .review-back-btn:hover {
-            background: #475569;
-        }
-
         @media (max-width: 900px) {
             .container { flex-direction: column; }
             .calc-panel, .interactive-panel { min-width: 100%; max-width: 100%; flex: 1; }
@@ -1756,8 +1742,9 @@
             </div>
 
             <div id="reviewContent" style="display:none;">
-                <button class="review-back-btn" onclick="showReviewIndex()">&#8592; All Topics</button>
+                <div id="reviewNavTop"></div>
                 <div id="reviewTopicContent"></div>
+                <div id="reviewNavBottom"></div>
             </div>
         </div>
     </div>

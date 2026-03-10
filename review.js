@@ -37,6 +37,51 @@ reviewStyles.textContent = `
         display: block;
         margin: 0 auto;
     }
+    .review-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    .review-nav.bottom {
+        margin-bottom: 0;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #334155;
+    }
+    .review-nav-btn {
+        background: #334155;
+        color: #e2e8f0;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .review-nav-btn:hover {
+        background: #475569;
+    }
+    .review-nav-btn.primary {
+        background: #1e3a5f;
+        color: #38bdf8;
+    }
+    .review-nav-btn.primary:hover {
+        background: #1e4a6f;
+    }
+    .review-nav-btn:disabled {
+        opacity: 0.3;
+        cursor: default;
+    }
+    .review-nav-btn:disabled:hover {
+        background: #334155;
+    }
+    .review-nav-center {
+        color: #64748b;
+        font-size: 0.8rem;
+    }
 `;
 document.head.appendChild(reviewStyles);
 
@@ -2461,14 +2506,43 @@ function showReviewIndex() {
     document.getElementById('reviewContent').style.display = 'none';
 }
 
+const REVIEW_TOPIC_ORDER = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+
+function buildReviewNav(num, extraClass) {
+    const idx = REVIEW_TOPIC_ORDER.indexOf(num);
+    const prevNum = idx > 0 ? REVIEW_TOPIC_ORDER[idx - 1] : null;
+    const nextNum = idx < REVIEW_TOPIC_ORDER.length - 1 ? REVIEW_TOPIC_ORDER[idx + 1] : null;
+    const prevTitle = prevNum ? REVIEW_TOPICS[prevNum].title : '';
+    const nextTitle = nextNum ? REVIEW_TOPICS[nextNum].title : '';
+
+    let html = '<div class="review-nav' + (extraClass ? ' ' + extraClass : '') + '">';
+    if (prevNum) {
+        html += '<button class="review-nav-btn" onclick="showReviewTopic(' + prevNum + ')" title="' + prevTitle + '">&larr; Previous</button>';
+    } else {
+        html += '<button class="review-nav-btn" disabled>&larr; Previous</button>';
+    }
+    html += '<button class="review-nav-btn" onclick="showReviewIndex()" style="background:transparent;color:#94a3b8;font-size:0.8rem;">All Topics</button>';
+    if (nextNum) {
+        html += '<button class="review-nav-btn primary" onclick="showReviewTopic(' + nextNum + ')" title="' + nextTitle + '">Next &rarr;</button>';
+    } else {
+        html += '<button class="review-nav-btn" disabled>Next &rarr;</button>';
+    }
+    html += '</div>';
+    return html;
+}
+
 function showReviewTopic(num) {
     const topic = REVIEW_TOPICS[num];
     if (!topic) return;
     document.getElementById('reviewIndex').style.display = 'none';
     document.getElementById('reviewContent').style.display = '';
+
+    document.getElementById('reviewNavTop').innerHTML = buildReviewNav(num, '');
     document.getElementById('reviewTopicContent').innerHTML =
         '<h2 style="color:#38bdf8; font-size:1.3rem; margin-bottom:16px;">' + topic.title + '</h2>' +
         topic.content;
+    document.getElementById('reviewNavBottom').innerHTML = buildReviewNav(num, 'bottom');
+
     document.getElementById('reviewContent').scrollTop = 0;
     window.scrollTo(0, 0);
 
