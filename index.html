@@ -756,6 +756,12 @@
             font-size: 0.9rem;
         }
 
+        .practice-index-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
         /* Prevent iOS zoom on input focus */
         input[type="text"], input[type="number"], input, select, textarea {
             font-size: 16px;
@@ -772,6 +778,7 @@
             .geo-choices { grid-template-columns: 1fr; }
             .learn-index { padding: 18px 14px; }
             .learn-index-grid { grid-template-columns: 1fr; }
+            .practice-index-grid { grid-template-columns: 1fr; }
             .tab-btn { padding: 10px 16px; font-size: 0.85rem; }
         }
     </style>
@@ -1560,10 +1567,10 @@
                     <div class="try-label">Try it: See how the area changes with dimensions</div>
                     <div class="learn-controls" style="margin-bottom:4px;">
                         <label>Shape:</label>
-                        <button class="learn-btn active" onclick="setAreaShape('rectangle', this)">Rectangle</button>
-                        <button class="learn-btn" onclick="setAreaShape('parallelogram', this)">Parallelogram</button>
-                        <button class="learn-btn" onclick="setAreaShape('trapezoid', this)">Trapezoid</button>
-                        <button class="learn-btn" onclick="setAreaShape('rhombus', this)">Rhombus</button>
+                        <button class="learn-btn active" onclick="setQuadAreaShape('rectangle', this)">Rectangle</button>
+                        <button class="learn-btn" onclick="setQuadAreaShape('parallelogram', this)">Parallelogram</button>
+                        <button class="learn-btn" onclick="setQuadAreaShape('trapezoid', this)">Trapezoid</button>
+                        <button class="learn-btn" onclick="setQuadAreaShape('rhombus', this)">Rhombus</button>
                     </div>
                     <div class="learn-controls">
                         <label id="quadDim1Label">Base:</label>
@@ -1658,7 +1665,7 @@
                 <h2 style="color:#38bdf8; font-size:1.4rem; margin-bottom:8px;">Practice Problems</h2>
                 <p style="color:#94a3b8; font-size:0.95rem;">Choose a topic to practice. Answer questions to build your streak.</p>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+            <div class="practice-index-grid">
                 <div class="learn-index-item" onclick="showPracticeSub('trig')" style="flex-direction:column; padding:24px 16px; text-align:center; gap:8px;">
                     <div style="font-size:2rem; margin-bottom:4px;">sin cos tan</div>
                     <div style="color:#38bdf8; font-weight:700; font-size:1.1rem;">Trig</div>
@@ -1886,6 +1893,7 @@
             }
         }
 
+        let practiceInitialized = false;
         let currentPracticeSub = null;
         function showPracticeIndex() {
             document.getElementById('practiceIndex').style.display = '';
@@ -4160,9 +4168,9 @@
         }
 
         // ---- Section 13: Quadrilateral area interactive ----
-        let currentAreaShape = 'rectangle';
-        function setAreaShape(shape, btn) {
-            currentAreaShape = shape;
+        let currentQuadAreaShape = 'rectangle';
+        function setQuadAreaShape(shape, btn) {
+            currentQuadAreaShape = shape;
             if (btn) { btn.parentElement.querySelectorAll('.learn-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
             const row3 = document.getElementById('quadDim3Row');
             const l1 = document.getElementById('quadDim1Label');
@@ -4207,19 +4215,19 @@
             let area = 0;
             let pts = [];
 
-            if (currentAreaShape === 'rectangle') {
+            if (currentQuadAreaShape === 'rectangle') {
                 const rw = d1 * scale, rh = d2 * scale;
                 pts = [{x:cx-rw/2,y:cy+rh/2},{x:cx+rw/2,y:cy+rh/2},{x:cx+rw/2,y:cy-rh/2},{x:cx-rw/2,y:cy-rh/2}];
                 area = d1 * d2;
-            } else if (currentAreaShape === 'parallelogram') {
+            } else if (currentQuadAreaShape === 'parallelogram') {
                 const bw = d1 * scale, bh = d2 * scale, off = bh * 0.4;
                 pts = [{x:cx-bw/2,y:cy+bh/2},{x:cx+bw/2,y:cy+bh/2},{x:cx+bw/2+off,y:cy-bh/2},{x:cx-bw/2+off,y:cy-bh/2}];
                 area = d1 * d2;
-            } else if (currentAreaShape === 'trapezoid') {
+            } else if (currentQuadAreaShape === 'trapezoid') {
                 const b1w = d1 * scale, bh = d2 * scale, b2w = d3 * scale;
                 pts = [{x:cx-b1w/2,y:cy+bh/2},{x:cx+b1w/2,y:cy+bh/2},{x:cx+b2w/2,y:cy-bh/2},{x:cx-b2w/2,y:cy-bh/2}];
                 area = 0.5 * (d1 + d3) * d2;
-            } else if (currentAreaShape === 'rhombus') {
+            } else if (currentQuadAreaShape === 'rhombus') {
                 const dw = d1 * scale / 2, dh = d2 * scale / 2;
                 pts = [{x:cx,y:cy-dh},{x:cx+dw,y:cy},{x:cx,y:cy+dh},{x:cx-dw,y:cy}];
                 area = 0.5 * d1 * d2;
@@ -4237,7 +4245,7 @@
             ctx.stroke();
 
             // Height line for parallelogram
-            if (currentAreaShape === 'parallelogram') {
+            if (currentQuadAreaShape === 'parallelogram') {
                 const topLeft = pts[3];
                 ctx.setLineDash([4, 3]);
                 ctx.strokeStyle = '#fbbf24';
@@ -4254,7 +4262,7 @@
             }
 
             // Diagonals for rhombus
-            if (currentAreaShape === 'rhombus') {
+            if (currentQuadAreaShape === 'rhombus') {
                 ctx.setLineDash([5, 3]);
                 ctx.strokeStyle = '#ef4444';
                 ctx.lineWidth = 1.5;
@@ -4954,7 +4962,6 @@
         }
 
         // ===== PRACTICE PROBLEMS =====
-        let practiceInitialized = false;
         let practiceDifficulty = 'easy';
         let practiceStats = { correct: 0, wrong: 0, streak: 0, best: 0 };
         let currentProblem = null;
