@@ -39,7 +39,7 @@ reviewStyles.textContent = `
     }
     .review-nav {
         display: flex;
-        justify-content: space-between;
+        gap: 8px;
         align-items: center;
         margin-bottom: 12px;
     }
@@ -2521,7 +2521,7 @@ function buildReviewNav(num, extraClass) {
     } else {
         html += '<button class="review-nav-btn" disabled>&larr; Previous</button>';
     }
-    html += '<button class="review-nav-btn" onclick="showReviewIndex()" style="background:transparent;color:#94a3b8;font-size:0.8rem;">All Topics</button>';
+    html += '<button class="review-nav-btn" onclick="showReviewIndex()">All Topics</button>';
     if (nextNum) {
         html += '<button class="review-nav-btn primary" onclick="showReviewTopic(' + nextNum + ')" title="' + nextTitle + '">Next &rarr;</button>';
     } else {
