@@ -2708,6 +2708,1247 @@
         }
         document.getElementById('arctanInput').addEventListener('input', updateArctanDemo);
 
+        // ===== Section 5: Pythagorean Theorem =====
+        function drawPythagCanvas() {
+            const canvas = document.getElementById('pythagCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const a = parseFloat(document.getElementById('pythagA').value);
+            const b = parseFloat(document.getElementById('pythagB').value);
+            const c = Math.sqrt(a * a + b * b);
+
+            document.getElementById('pythagAVal').textContent = a;
+            document.getElementById('pythagBVal').textContent = b;
+            document.getElementById('pythagResult').innerHTML =
+                a + '&sup2; + ' + b + '&sup2; = ' + (a*a).toFixed(1) + ' + ' + (b*b).toFixed(1) +
+                ' = ' + (a*a + b*b).toFixed(1) + ' = ' + c.toFixed(2) + '&sup2;';
+
+            const scale = Math.min((w * 0.35) / Math.max(a, b, c), (h * 0.35) / Math.max(a, b, c));
+            const ox = w * 0.35, oy = h * 0.7;
+
+            // Draw squares on each side
+            const sa = a * scale, sb = b * scale, sc = c * scale;
+
+            // Square on side a (vertical leg) - drawn to the left
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+            ctx.strokeStyle = COL_SIN;
+            ctx.lineWidth = 1.5;
+            ctx.fillRect(ox - sa, oy - sa, sa, sa);
+            ctx.strokeRect(ox - sa, oy - sa, sa, sa);
+            ctx.fillStyle = COL_SIN;
+            ctx.font = '13px system-ui';
+            ctx.textAlign = 'center';
+            ctx.fillText('a\u00B2=' + (a*a).toFixed(1), ox - sa/2, oy - sa/2 + 5);
+
+            // Square on side b (horizontal leg) - drawn below
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+            ctx.strokeStyle = COL_COS;
+            ctx.fillRect(ox, oy, sb, sb);
+            ctx.strokeRect(ox, oy, sb, sb);
+            ctx.fillStyle = COL_COS;
+            ctx.fillText('b\u00B2=' + (b*b).toFixed(1), ox + sb/2, oy + sb/2 + 5);
+
+            // Square on hypotenuse
+            const angle = Math.atan2(sa, sb);
+            ctx.save();
+            ctx.translate(ox, oy - sa);
+            ctx.rotate(Math.PI/2 - angle);
+            ctx.fillStyle = 'rgba(168, 85, 247, 0.15)';
+            ctx.strokeStyle = COL_HYP;
+            ctx.fillRect(0, 0, sc, sc);
+            ctx.strokeRect(0, 0, sc, sc);
+            ctx.fillStyle = COL_HYP;
+            ctx.rotate(0);
+            ctx.fillText('c\u00B2=' + (c*c).toFixed(1), sc/2, sc/2 + 5);
+            ctx.restore();
+
+            // Draw the triangle
+            ctx.beginPath();
+            ctx.moveTo(ox, oy);
+            ctx.lineTo(ox + sb, oy);
+            ctx.lineTo(ox, oy - sa);
+            ctx.closePath();
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // Right angle marker
+            const m = 12;
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(ox + m, oy);
+            ctx.lineTo(ox + m, oy - m);
+            ctx.lineTo(ox, oy - m);
+            ctx.stroke();
+
+            // Labels
+            ctx.font = 'bold 15px system-ui';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = COL_SIN;
+            ctx.fillText('a=' + a, ox - 20, oy - sa/2);
+            ctx.fillStyle = COL_COS;
+            ctx.fillText('b=' + b, ox + sb/2, oy + 20);
+            ctx.fillStyle = COL_HYP;
+            const mx = (ox + ox + sb) / 2, my = (oy + oy - sa) / 2;
+            ctx.fillText('c=' + c.toFixed(2), mx + 20, my - 10);
+        }
+
+        document.getElementById('pythagA').addEventListener('input', drawPythagCanvas);
+        document.getElementById('pythagB').addEventListener('input', drawPythagCanvas);
+
+        // ===== Section 6: Similar Triangles =====
+        function drawSimilarCanvas() {
+            const canvas = document.getElementById('similarCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const scale = parseFloat(document.getElementById('similarScale').value);
+            document.getElementById('similarScaleVal').textContent = scale.toFixed(1);
+            document.getElementById('similarResult').textContent = 'Ratio: ' + scale.toFixed(1) + '\u00D7';
+
+            // Original triangle (small)
+            const baseSize = Math.min(w * 0.18, h * 0.35);
+            const t1 = {x: w * 0.2, y: h * 0.75};
+            const t1pts = [
+                {x: t1.x, y: t1.y},
+                {x: t1.x + baseSize, y: t1.y},
+                {x: t1.x + baseSize * 0.3, y: t1.y - baseSize * 0.8}
+            ];
+
+            // Scaled triangle
+            const t2 = {x: w * 0.55, y: h * 0.85};
+            const t2pts = t1pts.map(p => ({
+                x: t2.x + (p.x - t1.x) * scale,
+                y: t2.y + (p.y - t1.y) * scale
+            }));
+
+            // Draw original
+            ctx.beginPath();
+            ctx.moveTo(t1pts[0].x, t1pts[0].y);
+            ctx.lineTo(t1pts[1].x, t1pts[1].y);
+            ctx.lineTo(t1pts[2].x, t1pts[2].y);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+            ctx.fill();
+            ctx.strokeStyle = COL_COS;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Side lengths of original
+            function dist(p1, p2) { return Math.sqrt((p2.x-p1.x)**2 + (p2.y-p1.y)**2); }
+            const sA = dist(t1pts[0], t1pts[1]);
+            const sB = dist(t1pts[1], t1pts[2]);
+            const sC = dist(t1pts[2], t1pts[0]);
+
+            // Label original sides
+            ctx.font = '12px system-ui';
+            ctx.fillStyle = COL_COS;
+            ctx.textAlign = 'center';
+            ctx.fillText('a', (t1pts[0].x + t1pts[1].x)/2, t1pts[0].y + 16);
+            ctx.fillText('b', (t1pts[1].x + t1pts[2].x)/2 + 10, (t1pts[1].y + t1pts[2].y)/2);
+            ctx.fillText('c', (t1pts[2].x + t1pts[0].x)/2 - 10, (t1pts[2].y + t1pts[0].y)/2);
+
+            // Draw angle arcs on original
+            function drawAngleArc(pts, idx, color) {
+                const p = pts[idx];
+                const p1 = pts[(idx + 1) % 3];
+                const p2 = pts[(idx + 2) % 3];
+                const a1 = Math.atan2(p1.y - p.y, p1.x - p.x);
+                const a2 = Math.atan2(p2.y - p.y, p2.x - p.x);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 15, Math.min(a1,a2), Math.max(a1,a2));
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            drawAngleArc(t1pts, 0, COL_SIN);
+            drawAngleArc(t1pts, 1, COL_TAN);
+            drawAngleArc(t1pts, 2, COL_HYP);
+
+            // Draw scaled
+            ctx.beginPath();
+            ctx.moveTo(t2pts[0].x, t2pts[0].y);
+            ctx.lineTo(t2pts[1].x, t2pts[1].y);
+            ctx.lineTo(t2pts[2].x, t2pts[2].y);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+            ctx.fill();
+            ctx.strokeStyle = COL_SIN;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Label scaled sides
+            ctx.fillStyle = COL_SIN;
+            ctx.fillText(scale.toFixed(1) + 'a', (t2pts[0].x + t2pts[1].x)/2, t2pts[0].y + 16);
+            ctx.fillText(scale.toFixed(1) + 'b', (t2pts[1].x + t2pts[2].x)/2 + 14, (t2pts[1].y + t2pts[2].y)/2);
+            ctx.fillText(scale.toFixed(1) + 'c', (t2pts[2].x + t2pts[0].x)/2 - 14, (t2pts[2].y + t2pts[0].y)/2);
+
+            // Draw angle arcs on scaled
+            const arcR = 15 * scale;
+            drawAngleArc(t2pts, 0, COL_SIN);
+            drawAngleArc(t2pts, 1, COL_TAN);
+            drawAngleArc(t2pts, 2, COL_HYP);
+
+            // Labels
+            ctx.font = 'bold 14px system-ui';
+            ctx.fillStyle = COL_COS;
+            ctx.fillText('Original', t1.x + baseSize/2, t1.y + 34);
+            ctx.fillStyle = COL_SIN;
+            ctx.fillText('Scaled \u00D7 ' + scale.toFixed(1), t2.x + baseSize * scale / 2, t2.y + 34);
+        }
+
+        document.getElementById('similarScale').addEventListener('input', drawSimilarCanvas);
+
+        // ===== Section 7: Area & Perimeter =====
+        let currentAreaShape = 'triangle';
+
+        function setAreaShape(shape, btn) {
+            currentAreaShape = shape;
+            if (btn) {
+                btn.parentElement.querySelectorAll('.learn-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            const d1Label = document.getElementById('areaDim1Label');
+            const d2Label = document.getElementById('areaDim2Label');
+            const d2Row = document.getElementById('areaDim2Row');
+            if (shape === 'circle') {
+                d1Label.textContent = 'Radius:';
+                d2Row.style.display = 'none';
+            } else if (shape === 'rectangle') {
+                d1Label.textContent = 'Length:';
+                d2Label.textContent = 'Width:';
+                d2Row.style.display = '';
+            } else if (shape === 'trapezoid') {
+                d1Label.textContent = 'Base a:';
+                d2Label.textContent = 'Height:';
+                d2Row.style.display = '';
+            } else {
+                d1Label.textContent = 'Base:';
+                d2Label.textContent = 'Height:';
+                d2Row.style.display = '';
+            }
+            drawAreaCanvas();
+        }
+
+        function drawAreaCanvas() {
+            const canvas = document.getElementById('areaCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const d1 = parseFloat(document.getElementById('areaDim1').value);
+            const d2 = parseFloat(document.getElementById('areaDim2').value);
+            document.getElementById('areaDim1Val').textContent = d1;
+            document.getElementById('areaDim2Val').textContent = d2;
+
+            const maxDim = 10;
+            const scale = Math.min(w * 0.6, h * 0.6) / maxDim;
+            const cx = w / 2, cy = h / 2;
+            let area = 0, perimeter = 0;
+
+            ctx.lineWidth = 2.5;
+
+            if (currentAreaShape === 'triangle') {
+                const bw = d1 * scale, bh = d2 * scale;
+                const x0 = cx - bw/2, y0 = cy + bh/2;
+                ctx.beginPath();
+                ctx.moveTo(x0, y0);
+                ctx.lineTo(x0 + bw, y0);
+                ctx.lineTo(x0 + bw/2, y0 - bh);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+                ctx.fill();
+                ctx.strokeStyle = COL_SIN;
+                ctx.stroke();
+                // Height dashed line
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x0 + bw/2, y0);
+                ctx.lineTo(x0 + bw/2, y0 - bh);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                // Labels
+                ctx.font = 'bold 13px system-ui';
+                ctx.fillStyle = COL_SIN;
+                ctx.textAlign = 'center';
+                ctx.fillText('b=' + d1, cx, y0 + 18);
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText('h=' + d2, x0 + bw/2 + 24, cy);
+                area = 0.5 * d1 * d2;
+                const side = Math.sqrt((d1/2)**2 + d2**2);
+                perimeter = d1 + 2 * side;
+            } else if (currentAreaShape === 'rectangle') {
+                const rw = d1 * scale, rh = d2 * scale;
+                const x0 = cx - rw/2, y0 = cy - rh/2;
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
+                ctx.fillRect(x0, y0, rw, rh);
+                ctx.strokeStyle = COL_COS;
+                ctx.strokeRect(x0, y0, rw, rh);
+                ctx.font = 'bold 13px system-ui';
+                ctx.fillStyle = COL_COS;
+                ctx.textAlign = 'center';
+                ctx.fillText('l=' + d1, cx, y0 + rh + 18);
+                ctx.save();
+                ctx.translate(x0 - 10, cy);
+                ctx.rotate(-Math.PI/2);
+                ctx.fillText('w=' + d2, 0, 0);
+                ctx.restore();
+                area = d1 * d2;
+                perimeter = 2 * (d1 + d2);
+            } else if (currentAreaShape === 'parallelogram') {
+                const pw = d1 * scale, ph = d2 * scale;
+                const skew = pw * 0.25;
+                const x0 = cx - pw/2, y0 = cy + ph/2;
+                ctx.beginPath();
+                ctx.moveTo(x0, y0);
+                ctx.lineTo(x0 + pw, y0);
+                ctx.lineTo(x0 + pw + skew, y0 - ph);
+                ctx.lineTo(x0 + skew, y0 - ph);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(168, 85, 247, 0.2)';
+                ctx.fill();
+                ctx.strokeStyle = COL_HYP;
+                ctx.stroke();
+                // Height dashed line
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x0 + skew, y0);
+                ctx.lineTo(x0 + skew, y0 - ph);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.font = 'bold 13px system-ui';
+                ctx.fillStyle = COL_HYP;
+                ctx.textAlign = 'center';
+                ctx.fillText('b=' + d1, cx, y0 + 18);
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText('h=' + d2, x0 + skew + 24, cy);
+                area = d1 * d2;
+                const side = Math.sqrt(skew/scale * skew/scale + d2 * d2);
+                perimeter = 2 * (d1 + side);
+            } else if (currentAreaShape === 'trapezoid') {
+                const a = d1, ht = d2;
+                const bBase = a * 0.6;
+                const aw = a * scale, bw = bBase * scale, th = ht * scale;
+                const x0 = cx - aw/2, y0 = cy + th/2;
+                const topOffset = (aw - bw) / 2;
+                ctx.beginPath();
+                ctx.moveTo(x0, y0);
+                ctx.lineTo(x0 + aw, y0);
+                ctx.lineTo(x0 + topOffset + bw, y0 - th);
+                ctx.lineTo(x0 + topOffset, y0 - th);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
+                ctx.fill();
+                ctx.strokeStyle = COL_TAN;
+                ctx.stroke();
+                // Height dashed
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(cx, y0);
+                ctx.lineTo(cx, y0 - th);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.font = 'bold 13px system-ui';
+                ctx.fillStyle = COL_TAN;
+                ctx.textAlign = 'center';
+                ctx.fillText('a=' + a.toFixed(1), cx, y0 + 18);
+                ctx.fillText('b=' + bBase.toFixed(1), cx, y0 - th - 8);
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText('h=' + ht, cx + aw/2 * 0.6, cy);
+                area = 0.5 * (a + bBase) * ht;
+                const sideLen = Math.sqrt(topOffset/scale * topOffset/scale + ht * ht);
+                perimeter = a + bBase + 2 * sideLen;
+            } else if (currentAreaShape === 'circle') {
+                const r = d1;
+                const rPx = r * scale;
+                ctx.beginPath();
+                ctx.arc(cx, cy, rPx, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+                ctx.fill();
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+                // Radius line
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + rPx, cy);
+                ctx.strokeStyle = COL_SIN;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.font = 'bold 13px system-ui';
+                ctx.fillStyle = COL_SIN;
+                ctx.textAlign = 'center';
+                ctx.fillText('r=' + r, cx + rPx/2, cy - 10);
+                area = Math.PI * r * r;
+                perimeter = 2 * Math.PI * r;
+            }
+
+            document.getElementById('areaResult').textContent =
+                'Area = ' + area.toFixed(2) + ' | Perimeter = ' + perimeter.toFixed(2);
+        }
+
+        document.getElementById('areaDim1').addEventListener('input', drawAreaCanvas);
+        document.getElementById('areaDim2').addEventListener('input', drawAreaCanvas);
+
+        // ===== Section 8: Circles =====
+        function drawCircleCanvas() {
+            const canvas = document.getElementById('circleCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const r = parseFloat(document.getElementById('circleRadius').value);
+            const angle = parseFloat(document.getElementById('circleAngle').value);
+            document.getElementById('circleRadiusVal').textContent = r;
+            document.getElementById('circleAngleVal').textContent = angle + '\u00B0';
+
+            const circumference = 2 * Math.PI * r;
+            const area = Math.PI * r * r;
+            const arcLen = (angle / 360) * circumference;
+            document.getElementById('circleResult').textContent =
+                'C = ' + circumference.toFixed(2) + ' | A = ' + area.toFixed(2) + ' | Arc = ' + arcLen.toFixed(2);
+
+            const cx = w * 0.45, cy = h * 0.5;
+            const scale = Math.min(w * 0.3, h * 0.35) / 8;
+            const rPx = r * scale;
+
+            // Full circle
+            ctx.beginPath();
+            ctx.arc(cx, cy, rPx, 0, Math.PI * 2);
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Arc sector fill
+            const startAngle = -Math.PI / 2;
+            const endAngle = startAngle + toRad(angle);
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, rPx, startAngle, endAngle);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
+            ctx.fill();
+
+            // Arc line (highlighted)
+            ctx.beginPath();
+            ctx.arc(cx, cy, rPx, startAngle, endAngle);
+            ctx.strokeStyle = COL_TAN;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Radius lines
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + rPx * Math.cos(startAngle), cy + rPx * Math.sin(startAngle));
+            ctx.strokeStyle = COL_SIN;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + rPx * Math.cos(endAngle), cy + rPx * Math.sin(endAngle));
+            ctx.strokeStyle = COL_SIN;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Chord
+            ctx.beginPath();
+            ctx.moveTo(cx + rPx * Math.cos(startAngle), cy + rPx * Math.sin(startAngle));
+            ctx.lineTo(cx + rPx * Math.cos(endAngle), cy + rPx * Math.sin(endAngle));
+            ctx.strokeStyle = COL_HYP;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Diameter line (faint)
+            ctx.beginPath();
+            ctx.moveTo(cx - rPx, cy);
+            ctx.lineTo(cx + rPx, cy);
+            ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Center dot
+            ctx.beginPath();
+            ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fill();
+
+            // Angle arc
+            ctx.beginPath();
+            ctx.arc(cx, cy, 20, startAngle, endAngle);
+            ctx.strokeStyle = COL_COS;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Labels
+            ctx.font = 'bold 13px system-ui';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = COL_SIN;
+            ctx.fillText('r = ' + r, cx + 8, cy - rPx/2 - 10);
+            ctx.fillStyle = COL_HYP;
+            ctx.fillText('d = ' + (2*r), cx - rPx - 30, cy - 8);
+            ctx.fillStyle = COL_TAN;
+            const midAng = startAngle + toRad(angle) / 2;
+            ctx.fillText('arc', cx + (rPx + 15) * Math.cos(midAng), cy + (rPx + 15) * Math.sin(midAng));
+            ctx.fillStyle = COL_COS;
+            ctx.fillText(angle + '\u00B0', cx + 26, cy - 6);
+            ctx.fillStyle = COL_HYP;
+            ctx.fillText('chord', cx + rPx * 0.3 * Math.cos(midAng) - 10, cy + rPx * 0.3 * Math.sin(midAng) + 15);
+
+            // Info panel on the right
+            const infoX = w * 0.72;
+            ctx.font = '13px system-ui';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillText('Parts of a Circle:', infoX, 30);
+            ctx.font = '12px system-ui';
+            ctx.fillStyle = COL_SIN;
+            ctx.fillText('Radius: ' + r, infoX, 55);
+            ctx.fillStyle = COL_HYP;
+            ctx.fillText('Diameter: ' + (2*r), infoX, 75);
+            ctx.fillStyle = COL_COS;
+            ctx.fillText('Circumference: ' + circumference.toFixed(2), infoX, 95);
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('Area: ' + area.toFixed(2), infoX, 115);
+            ctx.fillStyle = COL_TAN;
+            ctx.fillText('Arc length: ' + arcLen.toFixed(2), infoX, 135);
+        }
+
+        document.getElementById('circleRadius').addEventListener('input', drawCircleCanvas);
+        document.getElementById('circleAngle').addEventListener('input', drawCircleCanvas);
+
+        // ===== Section 9: Transformations =====
+        let currentTransform = 'none';
+
+        function setTransform(type, btn) {
+            currentTransform = type;
+            if (btn) {
+                btn.parentElement.querySelectorAll('.learn-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            drawTransformCanvas();
+        }
+
+        function drawTransformCanvas() {
+            const canvas = document.getElementById('transformCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const cx = w / 2, cy = h / 2;
+            const gridSize = Math.min(w, h) * 0.85;
+            const step = gridSize / 16;
+
+            // Draw grid
+            ctx.strokeStyle = COL_GRID;
+            ctx.lineWidth = 0.5;
+            for (let i = -8; i <= 8; i++) {
+                ctx.beginPath();
+                ctx.moveTo(cx + i * step, cy - 8 * step);
+                ctx.lineTo(cx + i * step, cy + 8 * step);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(cx - 8 * step, cy + i * step);
+                ctx.lineTo(cx + 8 * step, cy + i * step);
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = COL_AXIS;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(cx - 8 * step, cy);
+            ctx.lineTo(cx + 8 * step, cy);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - 8 * step);
+            ctx.lineTo(cx, cy + 8 * step);
+            ctx.stroke();
+
+            // Original triangle vertices (in grid units)
+            const orig = [{x: 1, y: 1}, {x: 4, y: 1}, {x: 2, y: 4}];
+
+            function drawTri(pts, color, alpha, label) {
+                ctx.beginPath();
+                ctx.moveTo(cx + pts[0].x * step, cy - pts[0].y * step);
+                for (let i = 1; i < pts.length; i++) {
+                    ctx.lineTo(cx + pts[i].x * step, cy - pts[i].y * step);
+                }
+                ctx.closePath();
+                ctx.fillStyle = color.replace(')', ', ' + alpha + ')').replace('rgb', 'rgba');
+                ctx.fill();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                // Label
+                const avgX = pts.reduce((s, p) => s + p.x, 0) / pts.length;
+                const avgY = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+                ctx.font = 'bold 12px system-ui';
+                ctx.fillStyle = color;
+                ctx.textAlign = 'center';
+                ctx.fillText(label, cx + avgX * step, cy - avgY * step + 4);
+            }
+
+            // Draw original (dimmed if transformed)
+            const origAlpha = currentTransform === 'none' ? 0.3 : 0.1;
+            drawTri(orig, 'rgb(56, 189, 248)', origAlpha, 'orig');
+
+            // Apply transformation
+            let transformed = null;
+            let tLabel = '';
+            if (currentTransform === 'translate') {
+                transformed = orig.map(p => ({x: p.x + 4, y: p.y + 2}));
+                tLabel = 'T(4,2)';
+            } else if (currentTransform === 'reflect-x') {
+                transformed = orig.map(p => ({x: p.x, y: -p.y}));
+                tLabel = 'Reflect X';
+            } else if (currentTransform === 'reflect-y') {
+                transformed = orig.map(p => ({x: -p.x, y: p.y}));
+                tLabel = 'Reflect Y';
+            } else if (currentTransform === 'rot90') {
+                transformed = orig.map(p => ({x: -p.y, y: p.x}));
+                tLabel = 'Rot 90\u00B0';
+            } else if (currentTransform === 'rot180') {
+                transformed = orig.map(p => ({x: -p.x, y: -p.y}));
+                tLabel = 'Rot 180\u00B0';
+            }
+
+            if (transformed) {
+                drawTri(transformed, 'rgb(239, 68, 68)', 0.3, tLabel);
+            }
+
+            // Axis labels
+            ctx.font = '11px system-ui';
+            ctx.fillStyle = COL_TEXT;
+            ctx.textAlign = 'center';
+            for (let i = -7; i <= 7; i++) {
+                if (i === 0) continue;
+                ctx.fillText(i, cx + i * step, cy + 14);
+                ctx.fillText(i, cx - 16, cy - i * step + 4);
+            }
+        }
+
+        // ===== Section 10: Coordinate Geometry =====
+        function drawCoordCanvas() {
+            const canvas = document.getElementById('coordCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const x1 = parseInt(document.getElementById('coordX1').value);
+            const y1 = parseInt(document.getElementById('coordY1').value);
+            const x2 = parseInt(document.getElementById('coordX2').value);
+            const y2 = parseInt(document.getElementById('coordY2').value);
+            document.getElementById('coordX1Val').textContent = x1;
+            document.getElementById('coordY1Val').textContent = y1;
+            document.getElementById('coordX2Val').textContent = x2;
+            document.getElementById('coordY2Val').textContent = y2;
+
+            const distance = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+            const midX = (x1 + x2) / 2, midY = (y1 + y2) / 2;
+            const slope = x2 !== x1 ? (y2 - y1) / (x2 - x1) : Infinity;
+            document.getElementById('coordResult').textContent =
+                'Distance = ' + distance.toFixed(2) + ' | Midpoint = (' + midX + ', ' + midY + ') | Slope = ' + (slope === Infinity ? 'undefined' : slope.toFixed(2));
+
+            const cx = w / 2, cy = h / 2;
+            const gridSize = Math.min(w, h) * 0.85;
+            const step = gridSize / 18;
+
+            // Grid
+            ctx.strokeStyle = COL_GRID;
+            ctx.lineWidth = 0.5;
+            for (let i = -9; i <= 9; i++) {
+                ctx.beginPath();
+                ctx.moveTo(cx + i * step, cy - 9 * step);
+                ctx.lineTo(cx + i * step, cy + 9 * step);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(cx - 9 * step, cy + i * step);
+                ctx.lineTo(cx + 9 * step, cy + i * step);
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = COL_AXIS;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(cx - 9 * step, cy);
+            ctx.lineTo(cx + 9 * step, cy);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - 9 * step);
+            ctx.lineTo(cx, cy + 9 * step);
+            ctx.stroke();
+
+            const px1 = cx + x1 * step, py1 = cy - y1 * step;
+            const px2 = cx + x2 * step, py2 = cy - y2 * step;
+
+            // Right triangle (showing Pythagorean connection)
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = COL_TEXT;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py1); // horizontal leg
+            ctx.lineTo(px2, py2); // vertical leg
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Leg labels
+            ctx.font = '12px system-ui';
+            ctx.fillStyle = COL_COS;
+            ctx.textAlign = 'center';
+            ctx.fillText('\u0394x=' + Math.abs(x2-x1), (px1 + px2) / 2, py1 + 16);
+            ctx.fillStyle = COL_SIN;
+            ctx.fillText('\u0394y=' + Math.abs(y2-y1), px2 + 22, (py1 + py2) / 2);
+
+            // Distance line
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.strokeStyle = COL_HYP;
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // Distance label
+            ctx.fillStyle = COL_HYP;
+            ctx.font = 'bold 13px system-ui';
+            ctx.fillText('d=' + distance.toFixed(2), (px1 + px2) / 2 - 20, (py1 + py2) / 2 - 10);
+
+            // Midpoint
+            const pmx = cx + midX * step, pmy = cy - midY * step;
+            ctx.beginPath();
+            ctx.arc(pmx, pmy, 5, 0, Math.PI * 2);
+            ctx.fillStyle = COL_COS;
+            ctx.fill();
+            ctx.font = '11px system-ui';
+            ctx.fillStyle = COL_COS;
+            ctx.fillText('M(' + midX + ',' + midY + ')', pmx + 10, pmy - 8);
+
+            // Points
+            ctx.beginPath();
+            ctx.arc(px1, py1, 6, 0, Math.PI * 2);
+            ctx.fillStyle = COL_SIN;
+            ctx.fill();
+            ctx.font = 'bold 12px system-ui';
+            ctx.fillStyle = COL_SIN;
+            ctx.fillText('(' + x1 + ',' + y1 + ')', px1 - 10, py1 + 20);
+
+            ctx.beginPath();
+            ctx.arc(px2, py2, 6, 0, Math.PI * 2);
+            ctx.fillStyle = COL_TAN;
+            ctx.fill();
+            ctx.fillStyle = COL_TAN;
+            ctx.fillText('(' + x2 + ',' + y2 + ')', px2 + 10, py2 - 10);
+
+            // Slope label
+            if (slope !== Infinity) {
+                ctx.fillStyle = COL_TAN;
+                ctx.font = '12px system-ui';
+                ctx.textAlign = 'left';
+                ctx.fillText('slope = ' + slope.toFixed(2), 10, 20);
+            }
+        }
+
+        document.getElementById('coordX1').addEventListener('input', drawCoordCanvas);
+        document.getElementById('coordY1').addEventListener('input', drawCoordCanvas);
+        document.getElementById('coordX2').addEventListener('input', drawCoordCanvas);
+        document.getElementById('coordY2').addEventListener('input', drawCoordCanvas);
+
+        // ===== Section 11: Quadrilaterals & Polygon Angles =====
+        let currentQuadType = 'rectangle';
+
+        function setQuadType(type, btn) {
+            currentQuadType = type;
+            if (btn) {
+                btn.parentElement.querySelectorAll('.learn-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            drawPolygonCanvas();
+        }
+
+        function drawPolygonCanvas() {
+            const canvas = document.getElementById('polygonCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const n = parseInt(document.getElementById('polygonSides').value);
+            document.getElementById('polygonSidesVal').textContent = n;
+
+            const angleSum = (n - 2) * 180;
+            const eachAngle = angleSum / n;
+            document.getElementById('polygonResult').textContent =
+                'Sum of interior angles = ' + angleSum + '\u00B0 | Each angle = ' + eachAngle.toFixed(1) + '\u00B0';
+
+            // Left half: regular polygon
+            const leftCx = w * 0.3, leftCy = h * 0.5;
+            const polyR = Math.min(w * 0.22, h * 0.38);
+
+            ctx.beginPath();
+            for (let i = 0; i < n; i++) {
+                const ang = -Math.PI / 2 + (2 * Math.PI * i) / n;
+                const px = leftCx + polyR * Math.cos(ang);
+                const py = leftCy + polyR * Math.sin(ang);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+            ctx.fill();
+            ctx.strokeStyle = COL_COS;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Angle arcs
+            for (let i = 0; i < n; i++) {
+                const ang = -Math.PI / 2 + (2 * Math.PI * i) / n;
+                const px = leftCx + polyR * Math.cos(ang);
+                const py = leftCy + polyR * Math.sin(ang);
+                const prevAng = -Math.PI / 2 + (2 * Math.PI * ((i - 1 + n) % n)) / n;
+                const nextAng = -Math.PI / 2 + (2 * Math.PI * ((i + 1) % n)) / n;
+                const toPrev = Math.atan2(leftCy + polyR * Math.sin(prevAng) - py, leftCx + polyR * Math.cos(prevAng) - px);
+                const toNext = Math.atan2(leftCy + polyR * Math.sin(nextAng) - py, leftCx + polyR * Math.cos(nextAng) - px);
+
+                ctx.beginPath();
+                let a1 = toNext, a2 = toPrev;
+                if (a2 < a1) a2 += 2 * Math.PI;
+                if (a2 - a1 > Math.PI) { a1 = toPrev; a2 = toNext; if (a2 < a1) a2 += 2 * Math.PI; }
+                ctx.arc(px, py, 14, a1, a2);
+                ctx.strokeStyle = COL_TAN;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+
+            // Label
+            ctx.font = 'bold 13px system-ui';
+            ctx.fillStyle = COL_COS;
+            ctx.textAlign = 'center';
+            ctx.fillText(n + '-sided polygon', leftCx, leftCy + polyR + 24);
+            ctx.font = '12px system-ui';
+            ctx.fillStyle = COL_TAN;
+            ctx.fillText('Each angle: ' + eachAngle.toFixed(1) + '\u00B0', leftCx, leftCy + polyR + 42);
+
+            // Right half: quadrilateral
+            const rightCx = w * 0.72, rightCy = h * 0.5;
+            const qs = Math.min(w * 0.18, h * 0.3);
+
+            let qPts = [];
+            let qProps = [];
+            if (currentQuadType === 'rectangle') {
+                const rw = qs * 1.4, rh = qs;
+                qPts = [
+                    {x: rightCx - rw/2, y: rightCy - rh/2},
+                    {x: rightCx + rw/2, y: rightCy - rh/2},
+                    {x: rightCx + rw/2, y: rightCy + rh/2},
+                    {x: rightCx - rw/2, y: rightCy + rh/2}
+                ];
+                qProps = ['4 right angles', 'Opposite sides equal', 'Opposite sides parallel'];
+            } else if (currentQuadType === 'rhombus') {
+                qPts = [
+                    {x: rightCx, y: rightCy - qs},
+                    {x: rightCx + qs * 0.7, y: rightCy},
+                    {x: rightCx, y: rightCy + qs},
+                    {x: rightCx - qs * 0.7, y: rightCy}
+                ];
+                qProps = ['4 equal sides', 'Opposite angles equal', 'Diagonals bisect each other'];
+            } else if (currentQuadType === 'square') {
+                qPts = [
+                    {x: rightCx - qs/2, y: rightCy - qs/2},
+                    {x: rightCx + qs/2, y: rightCy - qs/2},
+                    {x: rightCx + qs/2, y: rightCy + qs/2},
+                    {x: rightCx - qs/2, y: rightCy + qs/2}
+                ];
+                qProps = ['4 right angles', '4 equal sides', 'All properties of rect. & rhombus'];
+            } else if (currentQuadType === 'trapezoid') {
+                const topW = qs * 0.7;
+                qPts = [
+                    {x: rightCx - qs, y: rightCy + qs * 0.6},
+                    {x: rightCx + qs, y: rightCy + qs * 0.6},
+                    {x: rightCx + topW, y: rightCy - qs * 0.6},
+                    {x: rightCx - topW, y: rightCy - qs * 0.6}
+                ];
+                qProps = ['One pair of parallel sides', 'Non-parallel sides may differ'];
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(qPts[0].x, qPts[0].y);
+            for (let i = 1; i < qPts.length; i++) ctx.lineTo(qPts[i].x, qPts[i].y);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+            ctx.fill();
+            ctx.strokeStyle = COL_SIN;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Mark parallel sides
+            if (currentQuadType === 'rectangle' || currentQuadType === 'square' || currentQuadType === 'trapezoid') {
+                ctx.strokeStyle = COL_TAN;
+                ctx.lineWidth = 1.5;
+                // Top and bottom parallel marks
+                const markLen = 6;
+                const topMid = {x: (qPts[2].x + qPts[3].x)/2, y: (qPts[2].y + qPts[3].y)/2};
+                const botMid = {x: (qPts[0].x + qPts[1].x)/2, y: (qPts[0].y + qPts[1].y)/2};
+                ctx.beginPath();
+                ctx.moveTo(topMid.x - markLen, topMid.y - markLen);
+                ctx.lineTo(topMid.x + markLen, topMid.y + markLen);
+                ctx.moveTo(botMid.x - markLen, botMid.y - markLen);
+                ctx.lineTo(botMid.x + markLen, botMid.y + markLen);
+                ctx.stroke();
+            }
+
+            // Right angle marks for rectangle/square
+            if (currentQuadType === 'rectangle' || currentQuadType === 'square') {
+                const m = 8;
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 4; i++) {
+                    const p = qPts[i];
+                    const prev = qPts[(i + 3) % 4];
+                    const next = qPts[(i + 1) % 4];
+                    const d1x = (next.x - p.x), d1y = (next.y - p.y);
+                    const d2x = (prev.x - p.x), d2y = (prev.y - p.y);
+                    const len1 = Math.sqrt(d1x*d1x + d1y*d1y);
+                    const len2 = Math.sqrt(d2x*d2x + d2y*d2y);
+                    const u1x = d1x/len1 * m, u1y = d1y/len1 * m;
+                    const u2x = d2x/len2 * m, u2y = d2y/len2 * m;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x + u1x, p.y + u1y);
+                    ctx.lineTo(p.x + u1x + u2x, p.y + u1y + u2y);
+                    ctx.lineTo(p.x + u2x, p.y + u2y);
+                    ctx.stroke();
+                }
+            }
+
+            // Label
+            ctx.font = 'bold 13px system-ui';
+            ctx.fillStyle = COL_SIN;
+            ctx.textAlign = 'center';
+            ctx.fillText(currentQuadType.charAt(0).toUpperCase() + currentQuadType.slice(1), rightCx, rightCy + qs + 30);
+
+            // Properties
+            ctx.font = '11px system-ui';
+            ctx.fillStyle = COL_TEXT;
+            ctx.textAlign = 'left';
+            qProps.forEach((prop, i) => {
+                ctx.fillText('\u2022 ' + prop, rightCx - qs, rightCy + qs + 48 + i * 16);
+            });
+        }
+
+        document.getElementById('polygonSides').addEventListener('input', drawPolygonCanvas);
+
+        // ===== Section 12: Volume & Surface Area =====
+        let currentVolumeShape = 'prism';
+
+        function setVolumeShape(shape, btn) {
+            currentVolumeShape = shape;
+            if (btn) {
+                btn.parentElement.querySelectorAll('.learn-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            const d1Label = document.getElementById('volDim1Label');
+            const d2Label = document.getElementById('volDim2Label');
+            const d3Label = document.getElementById('volDim3Label');
+            const d2Row = document.getElementById('volDim2Row');
+            const d3Row = document.getElementById('volDim3Row');
+
+            if (shape === 'prism') {
+                d1Label.textContent = 'Length:';
+                d2Label.textContent = 'Width:';
+                d3Label.textContent = 'Height:';
+                d2Row.style.display = '';
+                d3Row.style.display = '';
+            } else if (shape === 'cylinder') {
+                d1Label.textContent = 'Radius:';
+                d2Label.textContent = 'Height:';
+                d2Row.style.display = '';
+                d3Row.style.display = 'none';
+            } else if (shape === 'cone') {
+                d1Label.textContent = 'Radius:';
+                d2Label.textContent = 'Height:';
+                d2Row.style.display = '';
+                d3Row.style.display = 'none';
+            } else if (shape === 'sphere') {
+                d1Label.textContent = 'Radius:';
+                d2Row.style.display = 'none';
+                d3Row.style.display = 'none';
+            }
+            drawVolumeCanvas();
+        }
+
+        function drawVolumeCanvas() {
+            const canvas = document.getElementById('volumeCanvas');
+            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
+            const {w, h} = resizeCanvas(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, w, h);
+
+            const d1 = parseFloat(document.getElementById('volDim1').value);
+            const d2 = parseFloat(document.getElementById('volDim2').value);
+            const d3 = parseFloat(document.getElementById('volDim3').value);
+            document.getElementById('volDim1Val').textContent = d1;
+            document.getElementById('volDim2Val').textContent = d2;
+            document.getElementById('volDim3Val').textContent = d3;
+
+            const cx = w * 0.45, cy = h * 0.55;
+            const scale = Math.min(w, h) * 0.04;
+            let volume = 0, surfaceArea = 0;
+
+            if (currentVolumeShape === 'prism') {
+                const l = d1, ww = d2, ht = d3;
+                volume = l * ww * ht;
+                surfaceArea = 2 * (l*ww + l*ht + ww*ht);
+
+                // Isometric-ish rectangular prism
+                const lPx = l * scale, wPx = ww * scale * 0.6, hPx = ht * scale;
+                const isoX = wPx * 0.8, isoY = wPx * 0.4;
+
+                // Front face
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+                ctx.strokeStyle = COL_COS;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(cx - lPx/2, cy);
+                ctx.lineTo(cx + lPx/2, cy);
+                ctx.lineTo(cx + lPx/2, cy - hPx);
+                ctx.lineTo(cx - lPx/2, cy - hPx);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Top face
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+                ctx.beginPath();
+                ctx.moveTo(cx - lPx/2, cy - hPx);
+                ctx.lineTo(cx + lPx/2, cy - hPx);
+                ctx.lineTo(cx + lPx/2 + isoX, cy - hPx - isoY);
+                ctx.lineTo(cx - lPx/2 + isoX, cy - hPx - isoY);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Right face
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.1)';
+                ctx.beginPath();
+                ctx.moveTo(cx + lPx/2, cy);
+                ctx.lineTo(cx + lPx/2 + isoX, cy - isoY);
+                ctx.lineTo(cx + lPx/2 + isoX, cy - hPx - isoY);
+                ctx.lineTo(cx + lPx/2, cy - hPx);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Labels
+                ctx.font = 'bold 12px system-ui';
+                ctx.fillStyle = COL_COS;
+                ctx.textAlign = 'center';
+                ctx.fillText('l=' + l, cx, cy + 18);
+                ctx.fillText('w=' + ww, cx + lPx/2 + isoX/2 + 12, cy - isoY/2 + 5);
+                ctx.fillText('h=' + ht, cx - lPx/2 - 16, cy - hPx/2);
+
+            } else if (currentVolumeShape === 'cylinder') {
+                const r = d1, ht = d2;
+                volume = Math.PI * r * r * ht;
+                surfaceArea = 2 * Math.PI * r * r + 2 * Math.PI * r * ht;
+
+                const rPx = r * scale * 1.2, hPx = ht * scale * 1.2;
+                const ellipseH = rPx * 0.3;
+
+                // Body
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+                ctx.strokeStyle = COL_SIN;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(cx - rPx, cy);
+                ctx.lineTo(cx - rPx, cy - hPx);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(cx + rPx, cy);
+                ctx.lineTo(cx + rPx, cy - hPx);
+                ctx.stroke();
+
+                // Bottom ellipse
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, rPx, ellipseH, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+                ctx.fill();
+                ctx.strokeStyle = COL_SIN;
+                ctx.stroke();
+
+                // Top ellipse
+                ctx.beginPath();
+                ctx.ellipse(cx, cy - hPx, rPx, ellipseH, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+                ctx.fill();
+                ctx.strokeStyle = COL_SIN;
+                ctx.stroke();
+
+                // Fill the body
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+                ctx.beginPath();
+                ctx.moveTo(cx - rPx, cy);
+                ctx.lineTo(cx - rPx, cy - hPx);
+                ctx.ellipse(cx, cy - hPx, rPx, ellipseH, 0, Math.PI, 2 * Math.PI);
+                ctx.lineTo(cx + rPx, cy);
+                ctx.ellipse(cx, cy, rPx, ellipseH, 0, 0, Math.PI);
+                ctx.fill();
+
+                // Radius line on top
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - hPx);
+                ctx.lineTo(cx + rPx, cy - hPx);
+                ctx.strokeStyle = COL_TAN;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Labels
+                ctx.font = 'bold 12px system-ui';
+                ctx.fillStyle = COL_TAN;
+                ctx.textAlign = 'center';
+                ctx.fillText('r=' + r, cx + rPx/2, cy - hPx - 12);
+                ctx.fillStyle = COL_SIN;
+                ctx.fillText('h=' + ht, cx - rPx - 18, cy - hPx/2);
+
+            } else if (currentVolumeShape === 'cone') {
+                const r = d1, ht = d2;
+                const slantH = Math.sqrt(r*r + ht*ht);
+                volume = (1/3) * Math.PI * r * r * ht;
+                surfaceArea = Math.PI * r * r + Math.PI * r * slantH;
+
+                const rPx = r * scale * 1.2, hPx = ht * scale * 1.2;
+                const ellipseH = rPx * 0.3;
+
+                // Body lines
+                ctx.strokeStyle = COL_HYP;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(cx - rPx, cy);
+                ctx.lineTo(cx, cy - hPx);
+                ctx.lineTo(cx + rPx, cy);
+                ctx.stroke();
+
+                // Fill
+                ctx.fillStyle = 'rgba(168, 85, 247, 0.15)';
+                ctx.beginPath();
+                ctx.moveTo(cx - rPx, cy);
+                ctx.lineTo(cx, cy - hPx);
+                ctx.lineTo(cx + rPx, cy);
+                ctx.ellipse(cx, cy, rPx, ellipseH, 0, 0, Math.PI);
+                ctx.fill();
+
+                // Base ellipse
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, rPx, ellipseH, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = COL_HYP;
+                ctx.stroke();
+
+                // Height dashed line
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx, cy - hPx);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Radius line
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + rPx, cy);
+                ctx.strokeStyle = COL_TAN;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Labels
+                ctx.font = 'bold 12px system-ui';
+                ctx.fillStyle = COL_TAN;
+                ctx.textAlign = 'center';
+                ctx.fillText('r=' + r, cx + rPx/2, cy + 20);
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText('h=' + ht, cx + 16, cy - hPx/2);
+
+            } else if (currentVolumeShape === 'sphere') {
+                const r = d1;
+                volume = (4/3) * Math.PI * r * r * r;
+                surfaceArea = 4 * Math.PI * r * r;
+
+                const rPx = r * scale * 1.5;
+
+                // Sphere circle
+                ctx.beginPath();
+                ctx.arc(cx, cy, rPx, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.15)';
+                ctx.fill();
+                ctx.strokeStyle = COL_TAN;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Equator ellipse
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, rPx, rPx * 0.3, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Vertical meridian
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, rPx * 0.3, rPx, 0, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Radius line
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + rPx, cy);
+                ctx.strokeStyle = COL_SIN;
+                ctx.lineWidth = 2;
+                ctx.setLineDash([]);
+                ctx.stroke();
+
+                // Center dot
+                ctx.beginPath();
+                ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fill();
+
+                // Label
+                ctx.font = 'bold 12px system-ui';
+                ctx.fillStyle = COL_SIN;
+                ctx.textAlign = 'center';
+                ctx.fillText('r=' + r, cx + rPx/2, cy - 12);
+            }
+
+            document.getElementById('volumeResult').textContent =
+                'Volume = ' + volume.toFixed(2) + ' | Surface Area = ' + surfaceArea.toFixed(2);
+        }
+
+        document.getElementById('volDim1').addEventListener('input', drawVolumeCanvas);
+        document.getElementById('volDim2').addEventListener('input', drawVolumeCanvas);
+        document.getElementById('volDim3').addEventListener('input', drawVolumeCanvas);
+
         // Dead code kept as stubs so nothing breaks
         let showRestriction = false;
         let showRestrictInv = false;
@@ -4804,7 +6045,8 @@
 
         // ---- Init all learning canvases ----
         function initLearningCanvases() {
-            requestAnimationFrame(() => {
+            // Double rAF ensures the browser has completed layout after display:block
+            requestAnimationFrame(() => { requestAnimationFrame(() => {
                 if (currentLearnSection === 1) { drawFuncGraph(); }
                 if (currentLearnSection === 2) { drawLearnTrigTriangle(); drawLearnClassicTriangle(); drawLearnTrigGraph(); }
                 if (currentLearnSection === 4) { drawInverseTrigTriangle('arcsin'); drawInverseTrigTriangle('arccos'); drawInverseTrigTriangle('arctan'); }
@@ -4816,7 +6058,7 @@
                 if (currentLearnSection === 10) { drawCoordCanvas(); }
                 if (currentLearnSection === 11) { drawPolygonCanvas(); }
                 if (currentLearnSection === 12) { drawVolumeCanvas(); }
-            });
+            }); });
         }
 
         // ===== INIT =====
