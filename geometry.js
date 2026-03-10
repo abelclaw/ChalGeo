@@ -104,19 +104,26 @@ function drawParallelLines(ctx, w, h, opts) {
     ctx.beginPath(); ctx.arc(ix2, y2, 4, 0, Math.PI * 2); ctx.fillStyle = '#f1f5f9'; ctx.fill();
 
     // Angle numbers at intersections
-    // Angles numbered 1-8: 1-4 at top intersection (clockwise from upper-right), 5-8 at bottom
+    // Compute sector bisector angles based on actual transversal angle
+    // Rays at each intersection: 0 (right), tAngle (down-right along transversal), π (left), π+tAngle (up-left along transversal)
+    // Sectors: angle1=upper-right, angle2=upper-left, angle3=lower-left, angle4=lower-right
+    const tA = tAngle;
+    const bisectors = [
+        (3 * Math.PI + tA) / 2,  // angle 1: upper-right
+        Math.PI + tA / 2,         // angle 2: upper-left
+        (tA + Math.PI) / 2,       // angle 3: lower-left
+        tA / 2,                    // angle 4: lower-right
+    ];
+
     if (showNumbers) {
-        const r = 18;
-        const angles = [
-            { n: 1, x: ix1 + r, y: y1 - r * 0.6 },
-            { n: 2, x: ix1 - r, y: y1 - r * 0.6 },
-            { n: 3, x: ix1 - r, y: y1 + r * 0.6 },
-            { n: 4, x: ix1 + r, y: y1 + r * 0.6 },
-            { n: 5, x: ix2 + r, y: y2 - r * 0.6 },
-            { n: 6, x: ix2 - r, y: y2 - r * 0.6 },
-            { n: 7, x: ix2 - r, y: y2 + r * 0.6 },
-            { n: 8, x: ix2 + r, y: y2 + r * 0.6 },
-        ];
+        const r = 20;
+        const angles = [];
+        for (let i = 0; i < 4; i++) {
+            angles.push({ n: i + 1, x: ix1 + r * Math.cos(bisectors[i]), y: y1 + r * Math.sin(bisectors[i]) });
+        }
+        for (let i = 0; i < 4; i++) {
+            angles.push({ n: i + 5, x: ix2 + r * Math.cos(bisectors[i]), y: y2 + r * Math.sin(bisectors[i]) });
+        }
         ctx.font = 'bold 13px system-ui';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -139,17 +146,12 @@ function drawParallelLines(ctx, w, h, opts) {
         ctx.font = 'bold 14px system-ui';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        const r = 20;
-        const positions = {
-            1: { x: ix1 + r, y: y1 - r * 0.6 },
-            2: { x: ix1 - r, y: y1 - r * 0.6 },
-            3: { x: ix1 - r, y: y1 + r * 0.7 },
-            4: { x: ix1 + r, y: y1 + r * 0.7 },
-            5: { x: ix2 + r, y: y2 - r * 0.6 },
-            6: { x: ix2 - r, y: y2 - r * 0.6 },
-            7: { x: ix2 - r, y: y2 + r * 0.7 },
-            8: { x: ix2 + r, y: y2 + r * 0.7 },
-        };
+        const r = 26;
+        const positions = {};
+        for (let i = 0; i < 4; i++) {
+            positions[i + 1] = { x: ix1 + r * Math.cos(bisectors[i]), y: y1 + r * Math.sin(bisectors[i]) };
+            positions[i + 5] = { x: ix2 + r * Math.cos(bisectors[i]), y: y2 + r * Math.sin(bisectors[i]) };
+        }
         Object.entries(angleLabels).forEach(([n, label]) => {
             const p = positions[n];
             if (!p) return;
@@ -282,23 +284,30 @@ function drawTwoTriangles(ctx, w, h, opts) {
         tickMarks: tickMarks2, angleMarks: angleMarks2
     });
 
-    // Right angle markers
-    if (rightAngle1 !== undefined) {
-        const vi = rightAngle1;
-        const p = v1[vi];
+    // Right angle markers - draw small square aligned with the two sides at the vertex
+    function drawRightAngleMark(verts, vi) {
+        const p = { x: verts[vi].x * w, y: verts[vi].y * h };
+        const prev = (vi + 2) % 3, next = (vi + 1) % 3;
+        const p1 = { x: verts[prev].x * w, y: verts[prev].y * h };
+        const p2 = { x: verts[next].x * w, y: verts[next].y * h };
+        // Unit vectors along each side
+        const d1x = p1.x - p.x, d1y = p1.y - p.y;
+        const len1 = Math.sqrt(d1x * d1x + d1y * d1y);
+        const d2x = p2.x - p.x, d2y = p2.y - p.y;
+        const len2 = Math.sqrt(d2x * d2x + d2y * d2y);
+        const sq = 10;
+        const u1x = d1x / len1 * sq, u1y = d1y / len1 * sq;
+        const u2x = d2x / len2 * sq, u2y = d2y / len2 * sq;
         ctx.strokeStyle = '#94a3b8';
         ctx.lineWidth = 1.5;
-        const sq = 10;
-        ctx.strokeRect(p.x * w - sq / 2, p.y * h - sq, sq, sq);
+        ctx.beginPath();
+        ctx.moveTo(p.x + u1x, p.y + u1y);
+        ctx.lineTo(p.x + u1x + u2x, p.y + u1y + u2y);
+        ctx.lineTo(p.x + u2x, p.y + u2y);
+        ctx.stroke();
     }
-    if (rightAngle2 !== undefined) {
-        const vi = rightAngle2;
-        const p = v2[vi];
-        ctx.strokeStyle = '#94a3b8';
-        ctx.lineWidth = 1.5;
-        const sq = 10;
-        ctx.strokeRect(p.x * w - sq / 2, p.y * h - sq, sq, sq);
-    }
+    if (rightAngle1 !== undefined) drawRightAngleMark(v1, rightAngle1);
+    if (rightAngle2 !== undefined) drawRightAngleMark(v2, rightAngle2);
 }
 
 // Draw isosceles triangle with base angles marked equal
@@ -317,15 +326,25 @@ function drawIsosceles(ctx, w, h, opts) {
     if (baseAngleLabel) {
         ctx.font = 'bold 13px system-ui';
         ctx.fillStyle = '#ef4444';
-        ctx.textAlign = 'center';
-        ctx.fillText(baseAngleLabel, v[0].x * w + 28, v[0].y * h - 18);
-        ctx.fillText(baseAngleLabel, v[1].x * w - 28, v[1].y * h - 18);
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        // Position labels toward the centroid of the triangle
+        const cx = (v[0].x + v[1].x + v[2].x) / 3 * w;
+        const cy = (v[0].y + v[1].y + v[2].y) / 3 * h;
+        for (const vi of [0, 1]) {
+            const px = v[vi].x * w, py = v[vi].y * h;
+            const dx = cx - px, dy = cy - py;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            ctx.fillText(baseAngleLabel, px + dx / len * 28, py + dy / len * 22);
+        }
     }
     if (vertexAngleLabel) {
         ctx.font = 'bold 13px system-ui';
         ctx.fillStyle = '#fbbf24';
         ctx.textAlign = 'center';
-        ctx.fillText(vertexAngleLabel, v[2].x * w, v[2].y * h + 30);
+        // Place label below the vertex angle arc, inside the triangle (toward centroid)
+        const cy = (v[0].y + v[1].y + v[2].y) / 3;
+        const offsetY = (cy > v[2].y) ? 32 : -20; // if centroid is below apex, go down; else up
+        ctx.fillText(vertexAngleLabel, v[2].x * w, v[2].y * h + offsetY);
     }
 }
 
@@ -356,13 +375,20 @@ function drawAnglesOnLine(ctx, w, h, opts) {
     ctx.arc(cx, y, 30, -(Math.PI - rayAngle), 0);
     ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.stroke();
 
-    // Labels
+    // Labels - position at bisector of each angle arc
+    // Canvas arc angles: -π = left, (rayAngle - π) = up along ray, 0 = right
     ctx.font = 'bold 14px system-ui';
+    ctx.textBaseline = 'middle';
     if (labels) {
-        ctx.fillStyle = '#ef4444'; ctx.textAlign = 'right';
-        ctx.fillText(labels[0], cx - 36, y - 14);
-        ctx.fillStyle = '#38bdf8'; ctx.textAlign = 'left';
-        ctx.fillText(labels[1], cx + 36, y - 14);
+        const labelR = 48;
+        // Left angle bisector: midpoint between -π and (rayAngle - π)
+        const leftBisect = rayAngle / 2 - Math.PI;
+        ctx.fillStyle = '#ef4444'; ctx.textAlign = 'center';
+        ctx.fillText(labels[0], cx + labelR * Math.cos(leftBisect), y + labelR * Math.sin(leftBisect));
+        // Right angle bisector: midpoint between (rayAngle - π) and 0
+        const rightBisect = (rayAngle - Math.PI) / 2;
+        ctx.fillStyle = '#38bdf8'; ctx.textAlign = 'center';
+        ctx.fillText(labels[1], cx + labelR * Math.cos(rightBisect), y + labelR * Math.sin(rightBisect));
     }
 
     // Point label
@@ -514,12 +540,19 @@ const EASY_PROBLEMS = [
             ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2.5;
             ctx.beginPath(); ctx.moveTo(cx - 120, cy - 80); ctx.lineTo(cx + 120, cy + 80); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(cx - 120, cy + 80); ctx.lineTo(cx + 120, cy - 80); ctx.stroke();
+            // Line angles: atan2(80,120) ≈ 0.588 rad
+            const lineAngle = Math.atan2(80, 120);
+            const lr = 28;
+            // 'a' labels in top and bottom sectors (vertical angles)
             ctx.font = 'bold 14px system-ui';
             ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#ef4444'; ctx.fillText('a', cx, cy - 26);
-            ctx.fillStyle = '#38bdf8'; ctx.fillText('b', cx + 26, cy);
-            ctx.fillStyle = '#ef4444'; ctx.fillText('a', cx, cy + 26);
-            ctx.fillStyle = '#38bdf8'; ctx.fillText('b', cx - 26, cy);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillText('a', cx + lr * Math.cos(-Math.PI / 2), cy + lr * Math.sin(-Math.PI / 2)); // top
+            ctx.fillText('a', cx + lr * Math.cos(Math.PI / 2), cy + lr * Math.sin(Math.PI / 2));   // bottom
+            // 'b' labels in left and right sectors (vertical angles)
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText('b', cx + lr * Math.cos(0), cy + lr * Math.sin(0));       // right
+            ctx.fillText('b', cx + lr * Math.cos(Math.PI), cy + lr * Math.sin(Math.PI)); // left
             ctx.fillStyle = '#94a3b8'; ctx.font = '13px system-ui';
             ctx.fillText('Vertical angles are equal: a = a, b = b', cx, h - 16);
         }
@@ -713,6 +746,208 @@ const EASY_PROBLEMS = [
             drawDiagram: (ctx, w, h) => {
                 drawIsosceles(ctx, w, h, { baseAngleLabel: baseAngle + '\u00B0', vertexAngleLabel: '?' });
             }
+        };
+    },
+
+    // ========== PYTHAGOREAN THEOREM (Easy) ==========
+    () => {
+        const a = gpick([3, 5, 6, 8]);
+        const b = gpick([4, 8, 8, 6]);
+        const c = Math.sqrt(a * a + b * b);
+        if (c !== Math.floor(c)) return EASY_PROBLEMS[EASY_PROBLEMS.length - 1]();
+        return {
+            type: 'Pythagorean Theorem',
+            question: `A right triangle has legs of length ${a} and ${b}. What is the length of the hypotenuse?`,
+            format: 'mc',
+            choices: gshuffle([c.toString(), (a + b).toString(), (c + 1).toString(), (c - 1).toString()]),
+            correct: c.toString(),
+            explanation: `c\u00B2 = ${a}\u00B2 + ${b}\u00B2 = ${a*a} + ${b*b} = ${a*a+b*b}. c = \u221A${a*a+b*b} = <strong>${c}</strong>.`,
+            drawDiagram: (ctx, w, h) => {
+                drawGeoTriangle(ctx, w, h, {
+                    vertices: [{ x: 0.15, y: 0.82 }, { x: 0.75, y: 0.82 }, { x: 0.15, y: 0.2 }],
+                    labels: ['A', 'B', 'C'],
+                    sides: [a.toString(), '?', b.toString()]
+                });
+                const sq = 10;
+                ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5;
+                ctx.strokeRect(0.15 * w, 0.82 * h - sq, sq, sq);
+            }
+        };
+    },
+    () => ({
+        type: 'Pythagorean Theorem',
+        question: 'Which of the following is a Pythagorean triple?',
+        format: 'mc',
+        choices: gshuffle(['3, 4, 5', '3, 5, 6', '4, 5, 7', '2, 4, 5']),
+        correct: '3, 4, 5',
+        explanation: '3\u00B2 + 4\u00B2 = 9 + 16 = 25 = 5\u00B2. So <strong>3, 4, 5</strong> is a Pythagorean triple.',
+        drawDiagram: null
+    }),
+    () => ({
+        type: 'Pythagorean Theorem',
+        question: 'Which of these is also a Pythagorean triple?',
+        format: 'mc',
+        choices: gshuffle(['5, 12, 13', '5, 11, 13', '6, 10, 13', '7, 11, 13']),
+        correct: '5, 12, 13',
+        explanation: '5\u00B2 + 12\u00B2 = 25 + 144 = 169 = 13\u00B2. So <strong>5, 12, 13</strong> is a Pythagorean triple.',
+        drawDiagram: null
+    }),
+
+    // ========== AREA & PERIMETER (Easy) ==========
+    () => {
+        const b = gpick([5, 6, 8, 10, 12]);
+        const ht = gpick([3, 4, 5, 6, 7]);
+        const area = 0.5 * b * ht;
+        return {
+            type: 'Area',
+            question: `What is the area of a triangle with base ${b} and height ${ht}?`,
+            format: 'mc',
+            choices: gshuffle([area.toString(), (b * ht).toString(), (2 * area + 1).toString(), (area - 1).toString()]),
+            correct: area.toString(),
+            explanation: `Area = \u00BDbh = \u00BD \u00D7 ${b} \u00D7 ${ht} = <strong>${area}</strong>.`,
+            drawDiagram: null
+        };
+    },
+    () => {
+        const l = gpick([5, 7, 8, 10, 12]);
+        const w = gpick([3, 4, 5, 6, 9]);
+        const area = l * w;
+        const perim = 2 * (l + w);
+        return {
+            type: 'Area & Perimeter',
+            question: `A rectangle has length ${l} and width ${w}. What is its area?`,
+            format: 'mc',
+            choices: gshuffle([area.toString(), perim.toString(), (area + l).toString(), (l + w).toString()]),
+            correct: area.toString(),
+            explanation: `Area = length \u00D7 width = ${l} \u00D7 ${w} = <strong>${area}</strong>.`,
+            drawDiagram: null
+        };
+    },
+    () => {
+        const r = gpick([3, 4, 5, 7, 10]);
+        const circ = '2\u03C0(' + r + ') = ' + (2 * r) + '\u03C0';
+        const ans = (2 * r) + '\u03C0';
+        return {
+            type: 'Circles',
+            question: `What is the circumference of a circle with radius ${r}? (Leave answer in terms of \u03C0)`,
+            format: 'mc',
+            choices: gshuffle([ans, (r * r) + '\u03C0', r + '\u03C0', (4 * r) + '\u03C0']),
+            correct: ans,
+            explanation: `C = 2\u03C0r = 2\u03C0(${r}) = <strong>${ans}</strong>.`,
+            drawDiagram: null
+        };
+    },
+    () => {
+        const r = gpick([2, 3, 4, 5, 6]);
+        const ans = (r * r) + '\u03C0';
+        return {
+            type: 'Circles',
+            question: `What is the area of a circle with radius ${r}? (Leave answer in terms of \u03C0)`,
+            format: 'mc',
+            choices: gshuffle([ans, (2 * r) + '\u03C0', (r * r * 2) + '\u03C0', (r + r) + '\u03C0']),
+            correct: ans,
+            explanation: `A = \u03C0r\u00B2 = \u03C0(${r})\u00B2 = <strong>${ans}</strong>.`,
+            drawDiagram: null
+        };
+    },
+
+    // ========== COORDINATE GEOMETRY (Easy) ==========
+    () => {
+        const x1 = gpick([1, 2, 3]), y1 = gpick([1, 2, 4]);
+        const x2 = gpick([5, 6, 7]), y2 = gpick([5, 6, 8]);
+        const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+        const ans = `(${mx}, ${my})`;
+        return {
+            type: 'Coordinate Geometry',
+            question: `What is the midpoint of the segment from (${x1}, ${y1}) to (${x2}, ${y2})?`,
+            format: 'mc',
+            choices: gshuffle([ans, `(${x1 + x2}, ${y1 + y2})`, `(${mx + 1}, ${my})`, `(${mx}, ${my + 1})`]),
+            correct: ans,
+            explanation: `Midpoint = ((${x1}+${x2})/2, (${y1}+${y2})/2) = <strong>${ans}</strong>.`,
+            drawDiagram: null
+        };
+    },
+    () => {
+        const rise = gpick([2, 3, 4, 6]);
+        const run = gpick([1, 2, 3, 4]);
+        const x1 = gpick([0, 1, 2]), y1 = gpick([0, 1, 3]);
+        const x2 = x1 + run, y2 = y1 + rise;
+        const slope = rise / run;
+        const slopeStr = (rise % run === 0) ? slope.toString() : rise + '/' + run;
+        return {
+            type: 'Coordinate Geometry',
+            question: `What is the slope of the line passing through (${x1}, ${y1}) and (${x2}, ${y2})?`,
+            format: 'mc',
+            choices: gshuffle([slopeStr, run + '/' + rise, (-rise) + '/' + run, (rise + 1) + '/' + run]),
+            correct: slopeStr,
+            explanation: `Slope = (y\u2082\u2212y\u2081)/(x\u2082\u2212x\u2081) = (${y2}\u2212${y1})/(${x2}\u2212${x1}) = ${rise}/${run} = <strong>${slopeStr}</strong>.`,
+            drawDiagram: null
+        };
+    },
+
+    // ========== TRANSFORMATIONS (Easy) ==========
+    () => ({
+        type: 'Transformations',
+        question: 'A figure is slid to a new position without rotating or flipping. What type of transformation is this?',
+        format: 'mc',
+        choices: gshuffle(['Translation', 'Rotation', 'Reflection', 'Dilation']),
+        correct: 'Translation',
+        explanation: 'A <strong>translation</strong> slides every point of a figure the same distance in the same direction.',
+        drawDiagram: null
+    }),
+    () => ({
+        type: 'Transformations',
+        question: 'A figure is flipped over a line. What type of transformation is this?',
+        format: 'mc',
+        choices: gshuffle(['Reflection', 'Translation', 'Rotation', 'Dilation']),
+        correct: 'Reflection',
+        explanation: 'A <strong>reflection</strong> flips a figure over a line (the line of reflection), creating a mirror image.',
+        drawDiagram: null
+    }),
+    () => ({
+        type: 'Transformations',
+        question: 'What are the coordinates of (3, 5) after reflection over the x-axis?',
+        format: 'mc',
+        choices: gshuffle(['(3, \u22125)', '(\u22123, 5)', '(\u22123, \u22125)', '(5, 3)']),
+        correct: '(3, \u22125)',
+        explanation: 'Reflecting over the x-axis negates the y-coordinate: (x, y) \u2192 (x, \u2212y). So (3, 5) \u2192 <strong>(3, \u22125)</strong>.',
+        drawDiagram: null
+    }),
+
+    // ========== POLYGON ANGLES (Easy) ==========
+    () => ({
+        type: 'Polygon Angles',
+        question: 'What is the sum of the interior angles of a quadrilateral?',
+        format: 'mc',
+        choices: gshuffle(['360\u00B0', '180\u00B0', '540\u00B0', '720\u00B0']),
+        correct: '360\u00B0',
+        explanation: 'Sum = (n \u2212 2) \u00D7 180\u00B0 = (4 \u2212 2) \u00D7 180\u00B0 = <strong>360\u00B0</strong>.',
+        drawDiagram: null
+    }),
+    () => ({
+        type: 'Polygon Angles',
+        question: 'What is the sum of the interior angles of a pentagon (5 sides)?',
+        format: 'mc',
+        choices: gshuffle(['540\u00B0', '360\u00B0', '720\u00B0', '900\u00B0']),
+        correct: '540\u00B0',
+        explanation: 'Sum = (5 \u2212 2) \u00D7 180\u00B0 = 3 \u00D7 180\u00B0 = <strong>540\u00B0</strong>.',
+        drawDiagram: null
+    }),
+
+    // ========== VOLUME (Easy) ==========
+    () => {
+        const l = gpick([3, 4, 5, 6]);
+        const w = gpick([2, 3, 4, 5]);
+        const ht = gpick([2, 3, 4, 7]);
+        const vol = l * w * ht;
+        return {
+            type: 'Volume',
+            question: `What is the volume of a rectangular prism with length ${l}, width ${w}, and height ${ht}?`,
+            format: 'mc',
+            choices: gshuffle([vol.toString(), (l * w + ht).toString(), (2 * (l * w + l * ht + w * ht)).toString(), (vol + l).toString()]),
+            correct: vol.toString(),
+            explanation: `V = lwh = ${l} \u00D7 ${w} \u00D7 ${ht} = <strong>${vol}</strong>.`,
+            drawDiagram: null
         };
     },
 ];
@@ -968,11 +1203,18 @@ const MEDIUM_PROBLEMS = [
             ctx.fillStyle = 'rgba(56, 189, 248, 0.04)';
             ctx.fill();
             ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.stroke();
-            ctx.font = 'bold 15px system-ui'; ctx.textAlign = 'center';
-            ctx.fillStyle = '#ef4444'; ctx.fillText('\u03B1', pts[0].x + 18, pts[0].y - 12);
-            ctx.fillStyle = '#38bdf8'; ctx.fillText('\u03B2', pts[1].x - 18, pts[1].y - 12);
-            ctx.fillStyle = '#ef4444'; ctx.fillText('\u03B1', pts[2].x - 18, pts[2].y + 18);
-            ctx.fillStyle = '#38bdf8'; ctx.fillText('\u03B2', pts[3].x + 18, pts[3].y + 18);
+            ctx.font = 'bold 15px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            // Position labels toward the center of the parallelogram
+            const pcx = (pts[0].x + pts[1].x + pts[2].x + pts[3].x) / 4;
+            const pcy = (pts[0].y + pts[1].y + pts[2].y + pts[3].y) / 4;
+            const labels = ['\u03B1', '\u03B2', '\u03B1', '\u03B2'];
+            const colors = ['#ef4444', '#38bdf8', '#ef4444', '#38bdf8'];
+            pts.forEach((p, i) => {
+                const dx = pcx - p.x, dy = pcy - p.y;
+                const len = Math.sqrt(dx * dx + dy * dy);
+                ctx.fillStyle = colors[i];
+                ctx.fillText(labels[i], p.x + dx / len * 22, p.y + dy / len * 22);
+            });
         }
     }),
     // Midpoint theorem

@@ -1101,6 +1101,319 @@
 
                 <div class="nav-buttons">
                     <button class="nav-btn" onclick="goToSection(3)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(5)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 5: Pythagorean Theorem -->
+            <div class="learn-section" id="learn-s5" style="display:none;">
+                <h2><span class="step-num">5</span> Pythagorean Theorem</h2>
+                <p>The Pythagorean Theorem is one of the most famous formulas in all of math. It tells us how the three sides of a right triangle are related:</p>
+                <p style="text-align:center; font-size:1.4rem; margin:12px 0;"><strong style="color:#ef4444;">a</strong>&sup2; + <strong style="color:#38bdf8;">b</strong>&sup2; = <strong style="color:#a855f7;">c</strong>&sup2;</p>
+                <p>Here, <strong style="color:#a855f7;">c</strong> is the hypotenuse (the longest side, opposite the right angle), and <strong style="color:#ef4444;">a</strong> and <strong style="color:#38bdf8;">b</strong> are the two legs.</p>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: Adjust the legs and see the squares</div>
+                    <div class="learn-controls">
+                        <label>Leg a:</label>
+                        <input type="range" id="pythagA" min="1" max="10" step="0.5" value="3">
+                        <span class="val-display" id="pythagAVal">3</span>
+                    </div>
+                    <div class="learn-controls">
+                        <label>Leg b:</label>
+                        <input type="range" id="pythagB" min="1" max="10" step="0.5" value="4">
+                        <span class="val-display" id="pythagBVal">4</span>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="pythagCanvas" style="height:320px;"></canvas>
+                    </div>
+                    <p style="text-align:center; color:#94a3b8; margin-top:8px;" id="pythagResult">3&sup2; + 4&sup2; = 9 + 16 = 25 = 5&sup2;</p>
+                </div>
+
+                <p>The classic example is the <strong>3-4-5 triangle</strong>: 3&sup2; + 4&sup2; = 9 + 16 = 25 = 5&sup2;. Other common Pythagorean triples include 5-12-13 and 8-15-17.</p>
+
+                <div class="key-idea">In any right triangle, <span class="highlight">the square of the hypotenuse equals the sum of the squares of the other two sides</span>: a&sup2; + b&sup2; = c&sup2;.</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(4)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(6)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 6: Similar Triangles -->
+            <div class="learn-section" id="learn-s6" style="display:none;">
+                <h2><span class="step-num">6</span> Similar Triangles</h2>
+                <p>Two triangles are <strong>similar</strong> if they have the same angles. This is called <strong>AA similarity</strong> (Angle-Angle) &mdash; if two angles match, the third must also match (since angles in a triangle always add to 180&deg;).</p>
+                <p>Similar triangles have the same shape but can be different sizes. Their corresponding sides are always in the same ratio:</p>
+                <p style="text-align:center; font-size:1.1rem; margin:12px 0;">a&sub1;/a&sub2; = b&sub1;/b&sub2; = c&sub1;/c&sub2; = <strong style="color:#38bdf8;">scale factor</strong></p>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: Adjust the scale factor</div>
+                    <div class="learn-controls">
+                        <label>Scale factor:</label>
+                        <input type="range" id="similarScale" min="0.5" max="3" step="0.1" value="1.8">
+                        <span class="val-display" id="similarScaleVal">1.8</span>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="similarCanvas" style="height:280px;"></canvas>
+                    </div>
+                    <p style="text-align:center; color:#94a3b8; margin-top:8px;" id="similarResult">Ratio: 1.8&times;</p>
+                </div>
+
+                <div class="key-idea">Similar triangles have the <span class="highlight">same shape but different sizes</span>. Their corresponding sides are always in the same ratio.</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(5)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(7)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 7: Area & Perimeter -->
+            <div class="learn-section" id="learn-s7" style="display:none;">
+                <h2><span class="step-num">7</span> Area &amp; Perimeter</h2>
+                <p>Area measures the space inside a shape. Perimeter measures the distance around the outside. Each shape has its own formula:</p>
+                <ul style="margin:12px 0 12px 20px; color:#94a3b8; line-height:1.8;">
+                    <li><strong style="color:#ef4444;">Triangle:</strong> A = &frac12;bh</li>
+                    <li><strong style="color:#38bdf8;">Rectangle:</strong> A = lw</li>
+                    <li><strong style="color:#a855f7;">Parallelogram:</strong> A = bh</li>
+                    <li><strong style="color:#fbbf24;">Trapezoid:</strong> A = &frac12;(a+b)h</li>
+                    <li><strong style="color:#10b981;">Circle:</strong> A = &pi;r&sup2;</li>
+                </ul>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: Pick a shape and adjust its size</div>
+                    <div class="learn-controls" style="margin-bottom:4px;">
+                        <label>Shape:</label>
+                        <button class="learn-btn active" onclick="setAreaShape('triangle', this)">Triangle</button>
+                        <button class="learn-btn" onclick="setAreaShape('rectangle', this)">Rectangle</button>
+                        <button class="learn-btn" onclick="setAreaShape('parallelogram', this)">Parallelogram</button>
+                        <button class="learn-btn" onclick="setAreaShape('trapezoid', this)">Trapezoid</button>
+                        <button class="learn-btn" onclick="setAreaShape('circle', this)">Circle</button>
+                    </div>
+                    <div class="learn-controls">
+                        <label id="areaDim1Label">Base:</label>
+                        <input type="range" id="areaDim1" min="1" max="10" step="0.5" value="6">
+                        <span class="val-display" id="areaDim1Val">6</span>
+                    </div>
+                    <div class="learn-controls" id="areaDim2Row">
+                        <label id="areaDim2Label">Height:</label>
+                        <input type="range" id="areaDim2" min="1" max="10" step="0.5" value="4">
+                        <span class="val-display" id="areaDim2Val">4</span>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="areaCanvas" style="height:280px;"></canvas>
+                    </div>
+                    <p style="text-align:center; color:#94a3b8; margin-top:8px;" id="areaResult">Area = 12.0 | Perimeter = 19.2</p>
+                </div>
+
+                <div class="key-idea"><span class="highlight">Area measures the space inside a shape.</span> Each shape has its own formula based on its dimensions.</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(6)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(8)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 8: Circles -->
+            <div class="learn-section" id="learn-s8" style="display:none;">
+                <h2><span class="step-num">8</span> Circles</h2>
+                <p>A circle is defined by its center and <strong style="color:#ef4444;">radius (r)</strong>. Every point on the circle is exactly <em>r</em> units from the center.</p>
+                <ul style="margin:12px 0 12px 20px; color:#94a3b8; line-height:1.8;">
+                    <li><strong style="color:#ef4444;">Radius (r):</strong> distance from center to edge</li>
+                    <li><strong style="color:#a855f7;">Diameter (d):</strong> 2r &mdash; distance across the circle through center</li>
+                    <li><strong style="color:#38bdf8;">Circumference (C):</strong> 2&pi;r &mdash; distance around the circle</li>
+                    <li><strong style="color:#10b981;">Area (A):</strong> &pi;r&sup2;</li>
+                    <li><strong style="color:#fbbf24;">Arc length:</strong> (angle/360) &times; 2&pi;r</li>
+                </ul>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: Adjust the radius and central angle</div>
+                    <div class="learn-controls">
+                        <label>Radius:</label>
+                        <input type="range" id="circleRadius" min="1" max="8" step="0.5" value="4">
+                        <span class="val-display" id="circleRadiusVal">4</span>
+                    </div>
+                    <div class="learn-controls">
+                        <label>Central angle:</label>
+                        <input type="range" id="circleAngle" min="10" max="360" step="5" value="90">
+                        <span class="val-display" id="circleAngleVal">90&deg;</span>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="circleCanvas" style="height:320px;"></canvas>
+                    </div>
+                    <p style="text-align:center; color:#94a3b8; margin-top:8px;" id="circleResult">C = 25.13 | A = 50.27 | Arc = 6.28</p>
+                </div>
+
+                <div class="key-idea">A circle's circumference and area both depend on the radius. <span class="highlight">Pi (&pi; &asymp; 3.14159) is the ratio of circumference to diameter.</span></div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(7)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(9)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 9: Transformations -->
+            <div class="learn-section" id="learn-s9" style="display:none;">
+                <h2><span class="step-num">9</span> Transformations</h2>
+                <p>Transformations change the position or orientation of a shape on the coordinate plane. The main rigid transformations are:</p>
+                <ul style="margin:12px 0 12px 20px; color:#94a3b8; line-height:1.8;">
+                    <li><strong style="color:#38bdf8;">Translation:</strong> slide the shape without rotating</li>
+                    <li><strong style="color:#ef4444;">Reflection:</strong> flip the shape over a line (mirror image)</li>
+                    <li><strong style="color:#a855f7;">Rotation:</strong> turn the shape around a point</li>
+                </ul>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: Apply transformations to a triangle</div>
+                    <div class="learn-controls" style="margin-bottom:4px;">
+                        <label>Transform:</label>
+                        <button class="learn-btn active" onclick="setTransform('none', this)">Original</button>
+                        <button class="learn-btn" onclick="setTransform('translate', this)">Translate</button>
+                        <button class="learn-btn" onclick="setTransform('reflect-x', this)">Reflect X</button>
+                        <button class="learn-btn" onclick="setTransform('reflect-y', this)">Reflect Y</button>
+                        <button class="learn-btn" onclick="setTransform('rot90', this)">Rotate 90&deg;</button>
+                        <button class="learn-btn" onclick="setTransform('rot180', this)">Rotate 180&deg;</button>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="transformCanvas" style="height:320px;"></canvas>
+                    </div>
+                </div>
+
+                <div class="key-idea"><span class="highlight">Transformations move shapes without changing their size or shape</span> (except dilations which change size).</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(8)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(10)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 10: Coordinate Geometry -->
+            <div class="learn-section" id="learn-s10" style="display:none;">
+                <h2><span class="step-num">10</span> Coordinate Geometry</h2>
+                <p>The coordinate plane lets us use algebra to solve geometry problems. Three key formulas connect coordinates to distances and directions:</p>
+                <ul style="margin:12px 0 12px 20px; color:#94a3b8; line-height:1.8;">
+                    <li><strong style="color:#a855f7;">Distance:</strong> d = &radic;((x&sub2;&minus;x&sub1;)&sup2; + (y&sub2;&minus;y&sub1;)&sup2;)</li>
+                    <li><strong style="color:#38bdf8;">Midpoint:</strong> ((x&sub1;+x&sub2;)/2, (y&sub1;+y&sub2;)/2)</li>
+                    <li><strong style="color:#fbbf24;">Slope:</strong> m = (y&sub2;&minus;y&sub1;)/(x&sub2;&minus;x&sub1;)</li>
+                </ul>
+                <p>Notice how the distance formula is really just the Pythagorean theorem! The horizontal difference is one leg, the vertical difference is the other, and the distance is the hypotenuse.</p>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: Move two points and see the formulas in action</div>
+                    <div class="learn-controls">
+                        <label>x&sub1;:</label>
+                        <input type="range" id="coordX1" min="-8" max="8" step="1" value="-3">
+                        <span class="val-display" id="coordX1Val">-3</span>
+                        <label style="margin-left:12px;">y&sub1;:</label>
+                        <input type="range" id="coordY1" min="-6" max="6" step="1" value="-2">
+                        <span class="val-display" id="coordY1Val">-2</span>
+                    </div>
+                    <div class="learn-controls">
+                        <label>x&sub2;:</label>
+                        <input type="range" id="coordX2" min="-8" max="8" step="1" value="5">
+                        <span class="val-display" id="coordX2Val">5</span>
+                        <label style="margin-left:12px;">y&sub2;:</label>
+                        <input type="range" id="coordY2" min="-6" max="6" step="1" value="4">
+                        <span class="val-display" id="coordY2Val">4</span>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="coordCanvas" style="height:320px;"></canvas>
+                    </div>
+                    <p style="text-align:center; color:#94a3b8; margin-top:8px;" id="coordResult">Distance = 10.0 | Midpoint = (1, 1) | Slope = 0.75</p>
+                </div>
+
+                <div class="key-idea"><span class="highlight">The distance formula is really just the Pythagorean theorem on a coordinate grid.</span></div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(9)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(11)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 11: Quadrilaterals & Polygon Angles -->
+            <div class="learn-section" id="learn-s11" style="display:none;">
+                <h2><span class="step-num">11</span> Quadrilaterals &amp; Polygon Angles</h2>
+                <p>Quadrilaterals are four-sided polygons. Each type has special properties:</p>
+                <ul style="margin:12px 0 12px 20px; color:#94a3b8; line-height:1.8;">
+                    <li><strong style="color:#38bdf8;">Rectangle:</strong> 4 right angles, opposite sides equal &amp; parallel</li>
+                    <li><strong style="color:#ef4444;">Rhombus:</strong> 4 equal sides, opposite angles equal</li>
+                    <li><strong style="color:#a855f7;">Square:</strong> 4 right angles AND 4 equal sides</li>
+                    <li><strong style="color:#fbbf24;">Trapezoid:</strong> exactly one pair of parallel sides</li>
+                </ul>
+                <p>For any polygon with <strong>n</strong> sides, the interior angles always add up to <strong>(n&minus;2) &times; 180&deg;</strong>.</p>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: See polygon interior angles</div>
+                    <div class="learn-controls">
+                        <label>Number of sides:</label>
+                        <input type="range" id="polygonSides" min="3" max="10" step="1" value="4">
+                        <span class="val-display" id="polygonSidesVal">4</span>
+                    </div>
+                    <div class="learn-controls" style="margin-bottom:4px;">
+                        <label>Quadrilateral:</label>
+                        <button class="learn-btn active" onclick="setQuadType('rectangle', this)">Rectangle</button>
+                        <button class="learn-btn" onclick="setQuadType('rhombus', this)">Rhombus</button>
+                        <button class="learn-btn" onclick="setQuadType('square', this)">Square</button>
+                        <button class="learn-btn" onclick="setQuadType('trapezoid', this)">Trapezoid</button>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="polygonCanvas" style="height:320px;"></canvas>
+                    </div>
+                    <p style="text-align:center; color:#94a3b8; margin-top:8px;" id="polygonResult">Sum of interior angles = 360&deg; | Each angle = 90&deg;</p>
+                </div>
+
+                <div class="key-idea"><span class="highlight">The interior angles of any polygon add up to (n&minus;2) &times; 180&deg;</span>.</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(10)">&larr; Back</button>
+                    <button class="nav-btn primary" onclick="goToSection(12)">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 12: Volume & Surface Area -->
+            <div class="learn-section" id="learn-s12" style="display:none;">
+                <h2><span class="step-num">12</span> Volume &amp; Surface Area</h2>
+                <p>Volume measures the amount of 3D space inside a solid shape. Surface area measures the total area of all its outer faces.</p>
+                <ul style="margin:12px 0 12px 20px; color:#94a3b8; line-height:1.8;">
+                    <li><strong style="color:#38bdf8;">Rectangular Prism:</strong> V = lwh, SA = 2(lw + lh + wh)</li>
+                    <li><strong style="color:#ef4444;">Cylinder:</strong> V = &pi;r&sup2;h, SA = 2&pi;r&sup2; + 2&pi;rh</li>
+                    <li><strong style="color:#a855f7;">Cone:</strong> V = &frac13;&pi;r&sup2;h, SA = &pi;r&sup2; + &pi;r&radic;(r&sup2;+h&sup2;)</li>
+                    <li><strong style="color:#fbbf24;">Sphere:</strong> V = &frac43;&pi;r&sup3;, SA = 4&pi;r&sup2;</li>
+                </ul>
+
+                <div class="try-it">
+                    <div class="try-label">Try it: Pick a 3D shape and adjust dimensions</div>
+                    <div class="learn-controls" style="margin-bottom:4px;">
+                        <label>Shape:</label>
+                        <button class="learn-btn active" onclick="setVolumeShape('prism', this)">Rect. Prism</button>
+                        <button class="learn-btn" onclick="setVolumeShape('cylinder', this)">Cylinder</button>
+                        <button class="learn-btn" onclick="setVolumeShape('cone', this)">Cone</button>
+                        <button class="learn-btn" onclick="setVolumeShape('sphere', this)">Sphere</button>
+                    </div>
+                    <div class="learn-controls">
+                        <label id="volDim1Label">Length:</label>
+                        <input type="range" id="volDim1" min="1" max="8" step="0.5" value="4">
+                        <span class="val-display" id="volDim1Val">4</span>
+                    </div>
+                    <div class="learn-controls" id="volDim2Row">
+                        <label id="volDim2Label">Width:</label>
+                        <input type="range" id="volDim2" min="1" max="8" step="0.5" value="3">
+                        <span class="val-display" id="volDim2Val">3</span>
+                    </div>
+                    <div class="learn-controls" id="volDim3Row">
+                        <label id="volDim3Label">Height:</label>
+                        <input type="range" id="volDim3" min="1" max="8" step="0.5" value="5">
+                        <span class="val-display" id="volDim3Val">5</span>
+                    </div>
+                    <div class="learn-canvas-wrap">
+                        <canvas id="volumeCanvas" style="height:320px;"></canvas>
+                    </div>
+                    <p style="text-align:center; color:#94a3b8; margin-top:8px;" id="volumeResult">Volume = 60.0 | Surface Area = 94.0</p>
+                </div>
+
+                <div class="key-idea"><span class="highlight">Volume measures 3D space inside a shape. Surface area measures the total area of all faces.</span></div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToSection(11)">&larr; Back</button>
                     <button class="nav-btn primary" onclick="switchTab('calculator')">Go try the calculator! &rarr;</button>
                 </div>
             </div>
@@ -1722,7 +2035,7 @@
 
         // ===== LEARNING SECTION =====
         let currentLearnSection = 1;
-        const totalSections = 4;
+        const totalSections = 12;
 
         // Section navigation
         function goToSection(n) {
@@ -4495,6 +4808,14 @@
                 if (currentLearnSection === 1) { drawFuncGraph(); }
                 if (currentLearnSection === 2) { drawLearnTrigTriangle(); drawLearnClassicTriangle(); drawLearnTrigGraph(); }
                 if (currentLearnSection === 4) { drawInverseTrigTriangle('arcsin'); drawInverseTrigTriangle('arccos'); drawInverseTrigTriangle('arctan'); }
+                if (currentLearnSection === 5) { drawPythagCanvas(); }
+                if (currentLearnSection === 6) { drawSimilarCanvas(); }
+                if (currentLearnSection === 7) { drawAreaCanvas(); }
+                if (currentLearnSection === 8) { drawCircleCanvas(); }
+                if (currentLearnSection === 9) { drawTransformCanvas(); }
+                if (currentLearnSection === 10) { drawCoordCanvas(); }
+                if (currentLearnSection === 11) { drawPolygonCanvas(); }
+                if (currentLearnSection === 12) { drawVolumeCanvas(); }
             });
         }
 
