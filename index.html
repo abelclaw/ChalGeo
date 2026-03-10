@@ -867,18 +867,25 @@
 
                 <div class="nav-buttons">
                     <div></div>
-                    <button class="nav-btn primary" onclick="goToSection(2)">Next: Inverse Functions &rarr;</button>
+                    <button class="nav-btn primary" onclick="goToSection(2)">Next: Undoing Functions &rarr;</button>
                 </div>
             </div>
 
             <!-- Section 2: Inverse Functions -->
             <div class="learn-section" id="learn-s2" style="display:none;">
-                <h2><span class="step-num">2</span> Inverse Functions: Running the Machine Backwards</h2>
+                <h2><span class="step-num">2</span> Inverse Functions: Undoing a Function</h2>
 
-                <p>Now imagine you see the <em>output</em> of the machine, and you want to figure out what the input was. You're running the function <strong>backwards</strong>. That's the inverse function.</p>
+                <p>An inverse function <strong>undoes</strong> what the original function did. It's like going backwards through the machine to figure out what the input was.</p>
+
+                <p>Think of it like this:</p>
+                <ul style="margin:8px 0 8px 20px; line-height:1.8;">
+                    <li><strong>Multiply by 2</strong> is undone by <strong>divide by 2</strong></li>
+                    <li><strong>Add 5</strong> is undone by <strong>subtract 5</strong></li>
+                    <li><strong>Square</strong> is undone by <strong>square root</strong></li>
+                </ul>
 
                 <div class="try-it">
-                    <div class="try-label">Try it: Given the output, find the input</div>
+                    <div class="try-label">Try it: The "&times;2" machine, run backwards</div>
                     <div class="learn-controls">
                         <label>Output (y):</label>
                         <input type="range" id="inverseOutput" min="-10" max="10" step="0.5" value="6">
@@ -886,12 +893,12 @@
                     </div>
                     <div class="machine-demo" id="inverseDemoArea">
                         <div class="machine-box">
-                            <div class="label">WHAT WAS THE INPUT?</div>
+                            <div class="label">ORIGINAL INPUT WAS</div>
                             <div class="value" style="color:#38bdf8;" id="inverseIn">3</div>
                         </div>
                         <div class="machine-arrow">&larr;</div>
                         <div class="machine-fn">
-                            <div class="label">INVERSE</div>
+                            <div class="label">UNDO: &divide; 2</div>
                             <div class="value" id="inverseFnLabel">&#xF7; 2</div>
                         </div>
                         <div class="machine-arrow">&larr;</div>
@@ -902,116 +909,68 @@
                     </div>
                 </div>
 
-                <p>If <strong style="color:#38bdf8">f(x) = 2x</strong>, then the inverse is <strong style="color:#818cf8">f&sup1;(y) = y / 2</strong>. The inverse undoes what the original function did.</p>
+                <p>The &times;2 function turned 3 into 6. The inverse (&divide;2) turns 6 back into 3. <strong>The inverse always gets you back to where you started.</strong></p>
 
-                <h3>Seeing it on the graph</h3>
-                <p>The inverse function is the original function <span class="highlight">reflected across the diagonal line y = x</span>. If the point (3, 6) is on the original function, then (6, 3) is on the inverse.</p>
-
-                <div class="learn-canvas-wrap">
-                    <canvas id="learnInverseGraph"></canvas>
-                    <div class="canvas-label">Move your mouse to trace both functions</div>
-                </div>
-                <div class="learn-controls">
-                    <label>Show:</label>
-                    <button class="learn-btn active" id="invShowOrigBtn" onclick="toggleInvShow('orig')">f(x) = 2x</button>
-                    <button class="learn-btn active" id="invShowInvBtn" onclick="toggleInvShow('inv')">f⁻¹(x) = x/2</button>
-                    <button class="learn-btn active" id="invShowMirrorBtn" onclick="toggleInvShow('mirror')">y = x mirror line</button>
-                </div>
-
-                <div class="key-idea">f(f&sup1;(x)) = x and f&sup1;(f(x)) = x. The function and its inverse <span class="highlight">cancel each other out</span>, like how addition cancels subtraction, or how multiplying cancels dividing.</div>
+                <div class="key-idea">An inverse function <span class="highlight">undoes</span> what the original function did &mdash; like how division undoes multiplication, or how subtraction undoes addition.</div>
 
                 <div class="nav-buttons">
                     <button class="nav-btn" onclick="goToSection(1)">&larr; Back</button>
-                    <button class="nav-btn primary" onclick="goToSection(3)">Next: The Problem with Inverses &rarr;</button>
+                    <button class="nav-btn primary" onclick="goToSection(3)">Next: Inverse Trig Functions &rarr;</button>
                 </div>
             </div>
 
-            <!-- Section 3: Not Every Function Has a Simple Inverse -->
+            <!-- Section 3: Inverse Trig Functions -->
             <div class="learn-section" id="learn-s3" style="display:none;">
-                <h2><span class="step-num">3</span> The Problem: Some Functions Can't Be Reversed Simply</h2>
+                <h2><span class="step-num">3</span> Inverse Trig Functions</h2>
 
-                <p>Here's the tricky part. Consider the function <strong style="color:#38bdf8">f(x) = x&sup2;</strong>.</p>
+                <p>You already know how to use sin, cos, and tan: you put in an <strong>angle</strong> and get out a <strong>ratio</strong> (a number).</p>
 
-                <p>If I tell you the output is <strong>9</strong>, what was the input? Well... it could have been <strong>3</strong> (because 3&sup2; = 9), but it also could have been <strong>-3</strong> (because (-3)&sup2; = 9). <em>Two different inputs gave the same output!</em></p>
+                <p>But what if you know the ratio and need to find the angle? That's where <strong>inverse trig functions</strong> come in. They undo sin, cos, and tan &mdash; they tell you <em>what angle</em> gives that ratio.</p>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0;">
+                    <div class="machine-box" style="background:#1a1a2e;">
+                        <div class="label">REGULAR: angle &rarr; ratio</div>
+                        <div class="value" style="font-size:0.85rem; color:#38bdf8;">sin(30&deg;) = 0.5</div>
+                    </div>
+                    <div class="machine-box" style="background:#1a1a2e;">
+                        <div class="label">INVERSE: ratio &rarr; angle</div>
+                        <div class="value" style="font-size:0.85rem; color:#818cf8;">arcsin(0.5) = 30&deg;</div>
+                    </div>
+                </div>
+
+                <h3>Try each inverse trig function</h3>
+                <p>Move the sliders to see how each inverse function finds the angle (between 0&deg; and 90&deg;) for a given ratio.</p>
 
                 <div class="try-it">
-                    <div class="try-label">Try it: See the problem with x&sup2;</div>
+                    <div class="try-label">arcsin &mdash; "what angle has this sine?"</div>
                     <div class="learn-controls">
-                        <label>Output (y):</label>
-                        <input type="range" id="squareProblemY" min="0" max="9" step="0.25" value="4">
-                        <span class="val-display" id="squareProblemYVal">4</span>
+                        <label>Sine value:</label>
+                        <input type="range" id="arcsinInput" min="0" max="1" step="0.05" value="0.5">
+                        <span class="val-display" id="arcsinInputVal">0.50</span>
                     </div>
                     <div class="machine-demo">
                         <div class="machine-box">
-                            <div class="label">INPUT COULD BE</div>
-                            <div class="value" style="color:#38bdf8;" id="sqPos">2</div>
+                            <div class="label">SINE VALUE</div>
+                            <div class="value" style="color:#38bdf8;" id="arcsinInVal">0.50</div>
                         </div>
-                        <div class="machine-arrow" style="color:#ef4444; font-size:1.2rem;">or</div>
-                        <div class="machine-box">
-                            <div class="label">INPUT COULD BE</div>
-                            <div class="value" style="color:#a855f7;" id="sqNeg">-2</div>
+                        <div class="machine-arrow">&rarr;</div>
+                        <div class="machine-fn">
+                            <div class="label">ARCSIN</div>
+                            <div class="value">sin⁻¹</div>
                         </div>
                         <div class="machine-arrow">&rarr;</div>
                         <div class="machine-box">
-                            <div class="label">BOTH GIVE OUTPUT</div>
-                            <div class="value" style="color:#ef4444;" id="sqOut">4</div>
+                            <div class="label">ANGLE</div>
+                            <div class="value" style="color:#ef4444;" id="arcsinOutVal">30.0&deg;</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="warning">A function that sends two different inputs to the same output <strong>doesn't have an inverse</strong> (at least, not in the normal sense) because you can't un-do it without ambiguity.</div>
-
-                <h3>The solution: Restrict the domain</h3>
-                <p>We fix this by choosing to only look at <em>part</em> of the function &mdash; a section where each output only happens once. For x&sup2;, if we only look at x &ge; 0, then each output has exactly one input, and the inverse is the square root: &radic;y.</p>
-
-                <div class="learn-canvas-wrap">
-                    <canvas id="learnRestrictGraph"></canvas>
-                    <div class="canvas-label">Click to toggle domain restriction</div>
-                </div>
-                <div class="learn-controls">
-                    <button class="learn-btn" id="restrictToggle" onclick="toggleRestrict()">Show restricted domain (x &ge; 0)</button>
-                    <button class="learn-btn" id="restrictInvToggle" onclick="toggleRestrictInv()" style="display:none;">Show inverse: &radic;x</button>
-                </div>
-
-                <div class="key-idea">To create an inverse, we sometimes need to <span class="highlight">restrict the domain</span> &mdash; only use part of the function where each output happens exactly once. The square root function is the inverse of x&sup2;, but only for x &ge; 0.</div>
-
-                <div class="nav-buttons">
-                    <button class="nav-btn" onclick="goToSection(2)">&larr; Back</button>
-                    <button class="nav-btn primary" onclick="goToSection(4)">Next: Inverse Trig Functions &rarr;</button>
-                </div>
-            </div>
-
-            <!-- Section 4: Inverse Trig Functions -->
-            <div class="learn-section" id="learn-s4" style="display:none;">
-                <h2><span class="step-num">4</span> Inverse Trig Functions (like arccos)</h2>
-
-                <p>The cosine function has exactly this problem. Many different angles give the same cosine value.</p>
-
-                <p>For example, <strong>cos(60&deg;) = 0.5</strong>, but also <strong>cos(300&deg;) = 0.5</strong>, and <strong>cos(420&deg;) = 0.5</strong>, and infinitely more. So if someone says "the cosine is 0.5, what's the angle?" &mdash; there are infinitely many correct answers!</p>
-
                 <div class="try-it">
-                    <div class="try-label">Try it: See how cosine repeats</div>
+                    <div class="try-label">arccos &mdash; "what angle has this cosine?"</div>
                     <div class="learn-controls">
                         <label>Cosine value:</label>
-                        <input type="range" id="cosValueSlider" min="-1" max="1" step="0.05" value="0.5">
-                        <span class="val-display" id="cosValueDisplay">0.50</span>
-                    </div>
-                    <div class="learn-canvas-wrap">
-                        <canvas id="learnCosGraph"></canvas>
-                        <div class="canvas-label">The horizontal line shows all angles with this cosine</div>
-                    </div>
-                </div>
-
-                <h3>arccos: Picking one answer</h3>
-                <p>We solve this the same way as with x&sup2;: we <span class="highlight">restrict the domain</span>. For cosine, we only look at angles from <strong>0&deg; to 180&deg;</strong> (0 to &pi; radians). In that range, each cosine value happens exactly once.</p>
-
-                <p>The inverse cosine, written <strong style="color:#818cf8">arccos</strong> or <strong style="color:#818cf8">cos&sup1;</strong>, answers the question: "What angle <em>between 0&deg; and 180&deg;</em> has this cosine value?"</p>
-
-                <div class="try-it">
-                    <div class="try-label">Try it: arccos in action</div>
-                    <div class="learn-controls">
-                        <label>cos value:</label>
-                        <input type="range" id="arccosInput" min="-1" max="1" step="0.05" value="0.5">
+                        <input type="range" id="arccosInput" min="0" max="1" step="0.05" value="0.5">
                         <span class="val-display" id="arccosInputVal">0.50</span>
                     </div>
                     <div class="machine-demo">
@@ -1026,39 +985,49 @@
                         </div>
                         <div class="machine-arrow">&rarr;</div>
                         <div class="machine-box">
-                            <div class="label">ANGLE (0&deg; to 180&deg;)</div>
+                            <div class="label">ANGLE</div>
                             <div class="value" style="color:#ef4444;" id="arccosOutVal">60.0&deg;</div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="learn-canvas-wrap">
-                        <canvas id="learnArccosGraph"></canvas>
-                        <div class="canvas-label">Move slider to see arccos trace the restricted curve</div>
+                <div class="try-it">
+                    <div class="try-label">arctan &mdash; "what angle has this tangent?"</div>
+                    <div class="learn-controls">
+                        <label>Tangent value:</label>
+                        <input type="range" id="arctanInput" min="0" max="5" step="0.1" value="1">
+                        <span class="val-display" id="arctanInputVal">1.00</span>
+                    </div>
+                    <div class="machine-demo">
+                        <div class="machine-box">
+                            <div class="label">TANGENT VALUE</div>
+                            <div class="value" style="color:#38bdf8;" id="arctanInVal">1.00</div>
+                        </div>
+                        <div class="machine-arrow">&rarr;</div>
+                        <div class="machine-fn">
+                            <div class="label">ARCTAN</div>
+                            <div class="value">tan⁻¹</div>
+                        </div>
+                        <div class="machine-arrow">&rarr;</div>
+                        <div class="machine-box">
+                            <div class="label">ANGLE</div>
+                            <div class="value" style="color:#ef4444;" id="arctanOutVal">45.0&deg;</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="key-idea"><strong>arccos(0.5) = 60&deg;</strong> because 60&deg; is the angle <em>between 0&deg; and 180&deg;</em> whose cosine is 0.5. There are other angles with cosine 0.5 (like 300&deg;), but arccos always picks the one in its restricted range.</div>
+                <h3>When do you use these?</h3>
+                <p>In a right triangle, if you know two sides but need the angle, use an inverse trig function:</p>
+                <ul style="margin:8px 0 8px 20px; line-height:1.8;">
+                    <li>You know <strong>opposite &amp; hypotenuse</strong> &rarr; use <strong style="color:#ef4444;">arcsin</strong> (sin&sup1;)</li>
+                    <li>You know <strong>adjacent &amp; hypotenuse</strong> &rarr; use <strong style="color:#38bdf8;">arccos</strong> (cos&sup1;)</li>
+                    <li>You know <strong>opposite &amp; adjacent</strong> &rarr; use <strong style="color:#fbbf24;">arctan</strong> (tan&sup1;)</li>
+                </ul>
 
-                <h3>Summary of all inverse trig ranges</h3>
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:14px 0;">
-                    <div class="machine-box">
-                        <div class="label">arcsin (sin⁻¹)</div>
-                        <div class="value" style="font-size:0.9rem; color:#ef4444;">-90&deg; to 90&deg;</div>
-                    </div>
-                    <div class="machine-box">
-                        <div class="label">arccos (cos⁻¹)</div>
-                        <div class="value" style="font-size:0.9rem; color:#38bdf8;">0&deg; to 180&deg;</div>
-                    </div>
-                    <div class="machine-box">
-                        <div class="label">arctan (tan⁻¹)</div>
-                        <div class="value" style="font-size:0.9rem; color:#fbbf24;">-90&deg; to 90&deg;</div>
-                    </div>
-                </div>
-
-                <div class="key-idea">Inverse trig functions answer the question: "What angle gives this value?" They always pick <span class="highlight">one specific answer</span> from a restricted range, even though many angles would work. That's the whole trick!</div>
+                <div class="key-idea">Inverse trig functions answer: <span class="highlight">"What angle gives this ratio?"</span> You give them a number, and they give you the angle. That's it!</div>
 
                 <div class="nav-buttons">
-                    <button class="nav-btn" onclick="goToSection(3)">&larr; Back</button>
+                    <button class="nav-btn" onclick="goToSection(2)">&larr; Back</button>
                     <button class="nav-btn primary" onclick="switchTab('calculator')">Go try the calculator! &rarr;</button>
                 </div>
             </div>
@@ -1679,7 +1648,7 @@
 
         // ===== LEARNING SECTION =====
         let currentLearnSection = 1;
-        const totalSections = 4;
+        const totalSections = 3;
 
         // Section navigation
         function goToSection(n) {
@@ -1902,174 +1871,6 @@
         });
         funcGraphCanvas.addEventListener('mouseleave', () => { graphHoverX = null; drawFuncGraph(); });
 
-        // ---- Section 2: Inverse Graph ----
-        let invHoverX = null;
-        let invShow = { orig: true, inv: true, mirror: true };
-
-        function toggleInvShow(key) {
-            invShow[key] = !invShow[key];
-            const btnId = key === 'orig' ? 'invShowOrigBtn' : key === 'inv' ? 'invShowInvBtn' : 'invShowMirrorBtn';
-            document.getElementById(btnId).classList.toggle('active', invShow[key]);
-            drawInverseGraph();
-        }
-
-        function drawInverseGraph() {
-            const canvas = document.getElementById('learnInverseGraph');
-            if (!canvas || canvas.getBoundingClientRect().width === 0) return;
-            const { w, h } = resizeCanvas(canvas);
-            const ctx = canvas.getContext('2d');
-
-            const pad = { left: 50, right: 20, top: 20, bottom: 40 };
-            const pw = w - pad.left - pad.right;
-            const ph = h - pad.top - pad.bottom;
-            const xMin = -5, xMax = 10, yMin = -5, yMax = 10;
-
-            function toSX(x) { return pad.left + ((x - xMin) / (xMax - xMin)) * pw; }
-            function toSY(y) { return pad.top + ((yMax - y) / (yMax - yMin)) * ph; }
-            function fromSX(sx) { return xMin + ((sx - pad.left) / pw) * (xMax - xMin); }
-
-            // Grid
-            ctx.strokeStyle = '#1e293b';
-            ctx.lineWidth = 1;
-            for (let x = Math.ceil(xMin); x <= xMax; x++) {
-                ctx.beginPath(); ctx.moveTo(toSX(x), pad.top); ctx.lineTo(toSX(x), h - pad.bottom); ctx.stroke();
-            }
-            for (let y = Math.ceil(yMin); y <= yMax; y++) {
-                ctx.beginPath(); ctx.moveTo(pad.left, toSY(y)); ctx.lineTo(w - pad.right, toSY(y)); ctx.stroke();
-            }
-
-            // Axes
-            ctx.strokeStyle = COL_AXIS;
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(pad.left, toSY(0)); ctx.lineTo(w - pad.right, toSY(0)); ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(toSX(0), pad.top); ctx.lineTo(toSX(0), h - pad.bottom); ctx.stroke();
-
-            // Mirror line y = x
-            if (invShow.mirror) {
-                ctx.setLineDash([6, 6]);
-                ctx.strokeStyle = '#475569';
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                const lineStart = Math.max(xMin, yMin);
-                const lineEnd = Math.min(xMax, yMax);
-                ctx.moveTo(toSX(lineStart), toSY(lineStart));
-                ctx.lineTo(toSX(lineEnd), toSY(lineEnd));
-                ctx.stroke();
-                ctx.setLineDash([]);
-                ctx.font = '12px system-ui';
-                ctx.fillStyle = '#64748b';
-                ctx.textAlign = 'left';
-                ctx.fillText('y = x', toSX(lineEnd) + 4, toSY(lineEnd) - 4);
-            }
-
-            // f(x) = 2x
-            if (invShow.orig) {
-                ctx.beginPath();
-                for (let i = 0; i <= pw; i++) {
-                    const x = fromSX(pad.left + i);
-                    const y = 2 * x;
-                    const sy = toSY(y);
-                    if (sy < pad.top - 50 || sy > h - pad.bottom + 50) continue;
-                    if (i === 0) ctx.moveTo(pad.left + i, sy); else ctx.lineTo(pad.left + i, sy);
-                }
-                ctx.strokeStyle = '#38bdf8';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-
-                ctx.font = 'bold 13px system-ui';
-                ctx.fillStyle = '#38bdf8';
-                ctx.textAlign = 'left';
-                ctx.fillText('f(x) = 2x', pad.left + 8, pad.top + 6);
-            }
-
-            // f⁻¹(x) = x/2
-            if (invShow.inv) {
-                ctx.beginPath();
-                for (let i = 0; i <= pw; i++) {
-                    const x = fromSX(pad.left + i);
-                    const y = x / 2;
-                    const sy = toSY(y);
-                    if (sy < pad.top - 50 || sy > h - pad.bottom + 50) continue;
-                    if (i === 0) ctx.moveTo(pad.left + i, sy); else ctx.lineTo(pad.left + i, sy);
-                }
-                ctx.strokeStyle = '#818cf8';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-
-                ctx.font = 'bold 13px system-ui';
-                ctx.fillStyle = '#818cf8';
-                ctx.textAlign = 'left';
-                ctx.fillText('f\u207B\u00B9(x) = x/2', pad.left + 8, pad.top + 24);
-            }
-
-            // Hover
-            if (invHoverX !== null) {
-                const x = invHoverX;
-                const y = 2 * x;
-                const sx = toSX(x), sy = toSY(y);
-
-                if (invShow.orig && sy >= pad.top && sy <= h - pad.bottom) {
-                    ctx.beginPath();
-                    ctx.arc(sx, sy, 7, 0, Math.PI * 2);
-                    ctx.fillStyle = '#38bdf8';
-                    ctx.fill();
-                    ctx.strokeStyle = '#fff';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    ctx.font = 'bold 12px Courier New';
-                    ctx.fillStyle = '#38bdf8';
-                    ctx.textAlign = 'left';
-                    ctx.fillText(`(${x.toFixed(1)}, ${y.toFixed(1)})`, sx + 12, sy - 4);
-                }
-
-                // Mirror point on inverse
-                if (invShow.inv) {
-                    const ix = y, iy = x;
-                    const isx = toSX(ix), isy = toSY(iy);
-                    if (isy >= pad.top && isy <= h - pad.bottom && isx >= pad.left && isx <= w - pad.right) {
-                        ctx.beginPath();
-                        ctx.arc(isx, isy, 7, 0, Math.PI * 2);
-                        ctx.fillStyle = '#818cf8';
-                        ctx.fill();
-                        ctx.strokeStyle = '#fff';
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-                        ctx.font = 'bold 12px Courier New';
-                        ctx.fillStyle = '#818cf8';
-                        ctx.textAlign = 'left';
-                        ctx.fillText(`(${ix.toFixed(1)}, ${iy.toFixed(1)})`, isx + 12, isy - 4);
-
-                        // Connect them
-                        if (invShow.orig && sy >= pad.top && sy <= h - pad.bottom) {
-                            ctx.setLineDash([3, 3]);
-                            ctx.strokeStyle = '#fbbf2460';
-                            ctx.lineWidth = 1.5;
-                            ctx.beginPath();
-                            ctx.moveTo(sx, sy);
-                            ctx.lineTo(isx, isy);
-                            ctx.stroke();
-                            ctx.setLineDash([]);
-                        }
-                    }
-                }
-            }
-        }
-
-        const invGraphCanvas = document.getElementById('learnInverseGraph');
-        invGraphCanvas.addEventListener('mousemove', (e) => {
-            const rect = invGraphCanvas.getBoundingClientRect();
-            const mx = e.clientX - rect.left;
-            const pad = { left: 50, right: 20 };
-            const pw = rect.width - pad.left - pad.right;
-            invHoverX = -5 + ((mx - pad.left) / pw) * 15;
-            invHoverX = Math.max(-5, Math.min(10, invHoverX));
-            invHoverX = Math.round(invHoverX * 2) / 2;
-            drawInverseGraph();
-        });
-        invGraphCanvas.addEventListener('mouseleave', () => { invHoverX = null; drawInverseGraph(); });
-
         // ---- Section 2: Inverse Machine ----
         function updateInverseDemo() {
             const y = parseFloat(document.getElementById('inverseOutput').value);
@@ -2080,7 +1881,38 @@
         }
         document.getElementById('inverseOutput').addEventListener('input', updateInverseDemo);
 
-        // ---- Section 3: Restriction ----
+        // ---- Section 3: Inverse Trig Sliders ----
+        // arcsin slider
+        function updateArcsinDemo() {
+            const v = parseFloat(document.getElementById('arcsinInput').value);
+            document.getElementById('arcsinInputVal').textContent = v.toFixed(2);
+            document.getElementById('arcsinInVal').textContent = v.toFixed(2);
+            const angle = toDeg(Math.asin(v));
+            document.getElementById('arcsinOutVal').textContent = angle.toFixed(1) + '\u00B0';
+        }
+        document.getElementById('arcsinInput').addEventListener('input', updateArcsinDemo);
+
+        // arccos slider
+        function updateArccosDemo() {
+            const v = parseFloat(document.getElementById('arccosInput').value);
+            document.getElementById('arccosInputVal').textContent = v.toFixed(2);
+            document.getElementById('arccosInVal').textContent = v.toFixed(2);
+            const angle = toDeg(Math.acos(v));
+            document.getElementById('arccosOutVal').textContent = angle.toFixed(1) + '\u00B0';
+        }
+        document.getElementById('arccosInput').addEventListener('input', updateArccosDemo);
+
+        // arctan slider
+        function updateArctanDemo() {
+            const v = parseFloat(document.getElementById('arctanInput').value);
+            document.getElementById('arctanInputVal').textContent = v.toFixed(2);
+            document.getElementById('arctanInVal').textContent = v.toFixed(2);
+            const angle = toDeg(Math.atan(v));
+            document.getElementById('arctanOutVal').textContent = angle.toFixed(1) + '\u00B0';
+        }
+        document.getElementById('arctanInput').addEventListener('input', updateArctanDemo);
+
+        // Dead code kept as stubs so nothing breaks
         let showRestriction = false;
         let showRestrictInv = false;
 
@@ -2256,15 +2088,7 @@
             }
         }
 
-        // ---- Section 3: Square problem slider ----
-        document.getElementById('squareProblemY').addEventListener('input', () => {
-            const y = parseFloat(document.getElementById('squareProblemY').value);
-            document.getElementById('squareProblemYVal').textContent = y;
-            document.getElementById('sqOut').textContent = y;
-            const r = Math.sqrt(y);
-            document.getElementById('sqPos').textContent = (Math.round(r * 100) / 100).toString();
-            document.getElementById('sqNeg').textContent = (Math.round(-r * 100) / 100).toString();
-        });
+        // (Old section 3 square problem slider removed)
 
         // ---- Section 4: Cosine graph ----
         function drawCosGraph() {
@@ -2390,22 +2214,7 @@
             });
         }
 
-        document.getElementById('cosValueSlider').addEventListener('input', () => {
-            const v = parseFloat(document.getElementById('cosValueSlider').value);
-            document.getElementById('cosValueDisplay').textContent = v.toFixed(2);
-            drawCosGraph();
-        });
-
-        // ---- Section 4: Arccos machine + graph ----
-        function updateArccosDemo() {
-            const v = parseFloat(document.getElementById('arccosInput').value);
-            document.getElementById('arccosInputVal').textContent = v.toFixed(2);
-            document.getElementById('arccosInVal').textContent = v.toFixed(2);
-            const angle = toDeg(Math.acos(v));
-            document.getElementById('arccosOutVal').textContent = angle.toFixed(1) + '\u00B0';
-            drawArccosGraph();
-        }
-        document.getElementById('arccosInput').addEventListener('input', updateArccosDemo);
+        // (Old cosine slider and arccos event listeners removed - now in Section 3 Inverse Trig Sliders)
 
         function drawArccosGraph() {
             const canvas = document.getElementById('learnArccosGraph');
@@ -4201,9 +4010,6 @@
         function initLearningCanvases() {
             requestAnimationFrame(() => {
                 if (currentLearnSection === 1) { drawFuncGraph(); }
-                if (currentLearnSection === 2) { drawInverseGraph(); }
-                if (currentLearnSection === 3) { drawRestrictGraph(); }
-                if (currentLearnSection === 4) { drawCosGraph(); drawArccosGraph(); }
             });
         }
 
