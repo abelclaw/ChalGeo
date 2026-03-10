@@ -636,13 +636,13 @@ const REVIEW_TOPICS = {
 
 <div class="review-topic">
     <h3>Quadrilateral Hierarchy</h3>
-    <div class="review-def"><strong>Parallelogram:</strong> both pairs of opposite sides are parallel and congruent. Opposite angles are congruent. Diagonals bisect each other.</div>
-    <div class="review-def"><strong>Rectangle:</strong> a parallelogram with four right angles. Diagonals are congruent.</div>
-    <div class="review-def"><strong>Rhombus:</strong> a parallelogram with four congruent sides. Diagonals are perpendicular and bisect the angles.</div>
-    <div class="review-def"><strong>Square:</strong> both a rectangle and a rhombus. Four congruent sides and four right angles.</div>
-    <div class="review-def"><strong>Trapezoid:</strong> exactly one pair of parallel sides (the bases). Legs are the non-parallel sides.</div>
-    <div class="review-def"><strong>Isosceles Trapezoid:</strong> a trapezoid with congruent legs. Base angles are congruent. Diagonals are congruent.</div>
-    <div class="review-def"><strong>Kite:</strong> two pairs of consecutive congruent sides. One pair of opposite angles are congruent. Diagonals are perpendicular.</div>
+    <div class="review-def"><strong>Parallelogram:</strong> both pairs of opposite sides are parallel and congruent. Opposite angles are congruent. Diagonals bisect each other.<br><em style="color:#94a3b8;">Example: a leaning bookshelf shape — opposite sides equal and parallel, but angles aren't 90°.</em></div>
+    <div class="review-def"><strong>Rectangle:</strong> a parallelogram with four right angles. Diagonals are congruent.<br><em style="color:#94a3b8;">Example: a door, a phone screen, a sheet of paper.</em></div>
+    <div class="review-def"><strong>Rhombus:</strong> a parallelogram with four congruent sides. Diagonals are perpendicular and bisect the angles.<br><em style="color:#94a3b8;">Example: a diamond shape on a playing card — all sides equal, but not all angles 90°.</em></div>
+    <div class="review-def"><strong>Square:</strong> both a rectangle and a rhombus. Four congruent sides and four right angles.<br><em style="color:#94a3b8;">Example: a checkerboard tile, a sticky note — all sides equal AND all angles 90°.</em></div>
+    <div class="review-def"><strong>Trapezoid:</strong> exactly one pair of parallel sides (the bases). Legs are the non-parallel sides.<br><em style="color:#94a3b8;">Example: a bucket seen from the side — the top and bottom are parallel but different lengths, the sides angle inward.</em></div>
+    <div class="review-def"><strong>Isosceles Trapezoid:</strong> a trapezoid with congruent legs. Base angles are congruent. Diagonals are congruent.<br><em style="color:#94a3b8;">Example: a symmetric lampshade shape — the two non-parallel sides are the same length.</em></div>
+    <div class="review-def"><strong>Kite:</strong> two pairs of consecutive congruent sides. One pair of opposite angles are congruent. Diagonals are perpendicular.<br><em style="color:#94a3b8;">Example: an actual flying kite — two short sides next to each other, two long sides next to each other.</em></div>
     <div class="review-diagram"><canvas id="reviewCanvas-11a"></canvas></div>
 </div>
 
