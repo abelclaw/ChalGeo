@@ -671,24 +671,47 @@ const REVIEW_TOPICS = {
         title: "Quadrilaterals & Polygons",
         content: `
 <div class="review-topic">
+    <h3>Quadrilateral Types</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px; margin-bottom:12px;">
+        <div style="background:#1e293b; border-radius:12px; padding:16px;">
+            <div class="review-diagram" style="margin-bottom:8px;"><canvas id="reviewCanvas-11-parallelogram"></canvas></div>
+            <div class="review-def"><strong style="color:#38bdf8;">Parallelogram</strong><br>Both pairs of opposite sides are parallel and congruent. Opposite angles are congruent. Diagonals bisect each other.</div>
+        </div>
+        <div style="background:#1e293b; border-radius:12px; padding:16px;">
+            <div class="review-diagram" style="margin-bottom:8px;"><canvas id="reviewCanvas-11-rectangle"></canvas></div>
+            <div class="review-def"><strong style="color:#818cf8;">Rectangle</strong><br>A parallelogram with four right angles. Diagonals are congruent.</div>
+        </div>
+        <div style="background:#1e293b; border-radius:12px; padding:16px;">
+            <div class="review-diagram" style="margin-bottom:8px;"><canvas id="reviewCanvas-11-rhombus"></canvas></div>
+            <div class="review-def"><strong style="color:#a855f7;">Rhombus</strong><br>A parallelogram with four congruent sides. Diagonals are perpendicular and bisect the angles.</div>
+        </div>
+        <div style="background:#1e293b; border-radius:12px; padding:16px;">
+            <div class="review-diagram" style="margin-bottom:8px;"><canvas id="reviewCanvas-11-square"></canvas></div>
+            <div class="review-def"><strong style="color:#10b981;">Square</strong><br>Both a rectangle and a rhombus. Four congruent sides and four right angles.</div>
+        </div>
+        <div style="background:#1e293b; border-radius:12px; padding:16px;">
+            <div class="review-diagram" style="margin-bottom:8px;"><canvas id="reviewCanvas-11-trapezoid"></canvas></div>
+            <div class="review-def"><strong style="color:#f97316;">Trapezoid</strong><br>Exactly one pair of parallel sides (the bases). Legs are the non-parallel sides.</div>
+        </div>
+        <div style="background:#1e293b; border-radius:12px; padding:16px;">
+            <div class="review-diagram" style="margin-bottom:8px;"><canvas id="reviewCanvas-11-isosceles-trap"></canvas></div>
+            <div class="review-def"><strong style="color:#fbbf24;">Isosceles Trapezoid</strong><br>A trapezoid with congruent legs. Base angles are congruent. Diagonals are congruent.</div>
+        </div>
+        <div style="background:#1e293b; border-radius:12px; padding:16px;">
+            <div class="review-diagram" style="margin-bottom:8px;"><canvas id="reviewCanvas-11-kite"></canvas></div>
+            <div class="review-def"><strong style="color:#ec4899;">Kite</strong><br>Two pairs of consecutive congruent sides. One pair of opposite angles are congruent. Diagonals are perpendicular.</div>
+        </div>
+    </div>
+    <p style="color:#94a3b8; font-style:italic; font-size:0.9rem; text-align:center;">Parallelogram → Rectangle → Square ← Rhombus ← Parallelogram</p>
+</div>
+
+<div class="review-topic">
     <h3>Polygon Angle Formulas</h3>
     <div class="review-formula">Sum of interior angles = (n − 2) × 180°</div>
     <div class="review-formula">Each interior angle (regular polygon) = (n − 2) × 180° / n</div>
     <div class="review-formula">Sum of exterior angles = 360° (always)</div>
     <div class="review-formula">Each exterior angle (regular polygon) = 360° / n</div>
     <p>where n = number of sides</p>
-</div>
-
-<div class="review-topic">
-    <h3>Quadrilateral Hierarchy</h3>
-    <div class="review-def"><strong>Parallelogram:</strong> both pairs of opposite sides are parallel and congruent. Opposite angles are congruent. Diagonals bisect each other.<br><em style="color:#94a3b8;">Example: a leaning bookshelf shape — opposite sides equal and parallel, but angles aren't 90°.</em></div>
-    <div class="review-def"><strong>Rectangle:</strong> a parallelogram with four right angles. Diagonals are congruent.<br><em style="color:#94a3b8;">Example: a door, a phone screen, a sheet of paper.</em></div>
-    <div class="review-def"><strong>Rhombus:</strong> a parallelogram with four congruent sides. Diagonals are perpendicular and bisect the angles.<br><em style="color:#94a3b8;">Example: a diamond shape on a playing card — all sides equal, but not all angles 90°.</em></div>
-    <div class="review-def"><strong>Square:</strong> both a rectangle and a rhombus. Four congruent sides and four right angles.<br><em style="color:#94a3b8;">Example: a checkerboard tile, a sticky note — all sides equal AND all angles 90°.</em></div>
-    <div class="review-def"><strong>Trapezoid:</strong> exactly one pair of parallel sides (the bases). Legs are the non-parallel sides.<br><em style="color:#94a3b8;">Example: a bucket seen from the side — the top and bottom are parallel but different lengths, the sides angle inward.</em></div>
-    <div class="review-def"><strong>Isosceles Trapezoid:</strong> a trapezoid with congruent legs. Base angles are congruent. Diagonals are congruent.<br><em style="color:#94a3b8;">Example: a symmetric lampshade shape — the two non-parallel sides are the same length.</em></div>
-    <div class="review-def"><strong>Kite:</strong> two pairs of consecutive congruent sides. One pair of opposite angles are congruent. Diagonals are perpendicular.<br><em style="color:#94a3b8;">Example: an actual flying kite — two short sides next to each other, two long sides next to each other.</em></div>
-    <div class="review-diagram"><canvas id="reviewCanvas-11a"></canvas></div>
 </div>
 
 <div class="review-topic">
@@ -1648,108 +1671,254 @@ function drawReviewDiagram10a(canvas) {
 
 // ===== Topic 11: Quadrilaterals =====
 
-function drawReviewDiagram11a(canvas) {
-    const { ctx, w, h } = setupReviewCanvas(canvas);
-    const shapes = [
-        { name: 'Parallelogram', x: w * 0.17 },
-        { name: 'Rectangle', x: w * 0.42 },
-        { name: 'Rhombus', x: w * 0.65 },
-        { name: 'Square', x: w * 0.87 }
-    ];
-    const sw = w * 0.18, sh = sw * 0.65;
-    const cy = h * 0.48;
+function setupSmallReviewCanvas(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.parentElement.clientWidth || 260;
+    const h = 140;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+    return { ctx, w, h };
+}
 
-    ctx.font = 'bold 12px system-ui';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillText('Quadrilateral Types', w / 2, 16);
+function drawReviewQuadParallelogram(canvas) {
+    const { ctx, w, h } = setupSmallReviewCanvas(canvas);
+    const cx = w / 2, cy = h / 2;
+    const sw = Math.min(w * 0.55, 120), sh = sw * 0.6;
+    const skew = sw * 0.2;
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - sw/2 + skew, cy - sh/2);
+    ctx.lineTo(cx + sw/2 + skew, cy - sh/2);
+    ctx.lineTo(cx + sw/2 - skew, cy + sh/2);
+    ctx.lineTo(cx - sw/2 - skew, cy + sh/2);
+    ctx.closePath();
+    ctx.stroke();
+    // Parallel marks
+    drawParallelMark(ctx, cx + skew/2, cy - sh/2, 0);
+    drawParallelMark(ctx, cx - skew/2, cy + sh/2, 0);
+    // Equal side marks on left and right
+    const lx = cx - sw/2, rx = cx + sw/2;
+    drawTickMark(ctx, (lx - skew + lx + skew)/2, cy, Math.atan2(sh, skew*2) * 180/Math.PI - 90);
+    drawTickMark(ctx, (rx - skew + rx + skew)/2, cy, Math.atan2(sh, skew*2) * 180/Math.PI - 90);
+}
 
-    shapes.forEach((s, i) => {
-        const cx = s.x;
-        const colors = ['#38bdf8', '#818cf8', '#a855f7', '#10b981'];
-        ctx.strokeStyle = colors[i];
-        ctx.lineWidth = 2.5;
-
-        if (i === 0) {
-            // Parallelogram (skewed)
-            const skew = sw * 0.2;
-            ctx.beginPath();
-            ctx.moveTo(cx - sw / 2 + skew, cy - sh / 2);
-            ctx.lineTo(cx + sw / 2 + skew, cy - sh / 2);
-            ctx.lineTo(cx + sw / 2 - skew, cy + sh / 2);
-            ctx.lineTo(cx - sw / 2 - skew, cy + sh / 2);
-            ctx.closePath();
-            ctx.stroke();
-            // Parallel marks on top and bottom
-            drawParallelMark(ctx, cx, cy - sh / 2, 0);
-            drawParallelMark(ctx, cx, cy + sh / 2, 0);
-        } else if (i === 1) {
-            // Rectangle
-            ctx.beginPath();
-            ctx.rect(cx - sw / 2, cy - sh / 2, sw, sh);
-            ctx.stroke();
-            // Right angle marks at all corners
-            const rsq = 6;
-            [[cx - sw / 2, cy - sh / 2, 1, 1], [cx + sw / 2, cy - sh / 2, -1, 1],
-             [cx - sw / 2, cy + sh / 2, 1, -1], [cx + sw / 2, cy + sh / 2, -1, -1]].forEach(([x, y, dx, dy]) => {
-                ctx.strokeStyle = '#fbbf24';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(x + rsq * dx, y);
-                ctx.lineTo(x + rsq * dx, y + rsq * dy);
-                ctx.lineTo(x, y + rsq * dy);
-                ctx.stroke();
-            });
-            ctx.strokeStyle = colors[i];
-        } else if (i === 2) {
-            // Rhombus (diamond shape)
-            const dh = sh / 2 + 8;
-            const dw = sw / 2 - 2;
-            ctx.beginPath();
-            ctx.moveTo(cx, cy - dh);
-            ctx.lineTo(cx + dw, cy);
-            ctx.lineTo(cx, cy + dh);
-            ctx.lineTo(cx - dw, cy);
-            ctx.closePath();
-            ctx.stroke();
-            // Single tick on all 4 sides (all equal)
-            drawTickMark(ctx, cx + dw / 2, cy - dh / 2, 55);
-            drawTickMark(ctx, cx - dw / 2, cy - dh / 2, -55);
-            drawTickMark(ctx, cx + dw / 2, cy + dh / 2, -55);
-            drawTickMark(ctx, cx - dw / 2, cy + dh / 2, 55);
-        } else {
-            // Square
-            const ss = sh * 0.8;
-            ctx.beginPath();
-            ctx.rect(cx - ss / 2, cy - ss / 2, ss, ss);
-            ctx.stroke();
-            // Right angle mark
-            const rsq = 5;
-            ctx.strokeStyle = '#fbbf24';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(cx - ss / 2 + rsq, cy - ss / 2);
-            ctx.lineTo(cx - ss / 2 + rsq, cy - ss / 2 + rsq);
-            ctx.lineTo(cx - ss / 2, cy - ss / 2 + rsq);
-            ctx.stroke();
-            // Tick marks on all sides
-            drawTickMark(ctx, cx, cy - ss / 2, 0);
-            drawTickMark(ctx, cx, cy + ss / 2, 0);
-            drawTickMark(ctx, cx - ss / 2, cy, 90);
-            drawTickMark(ctx, cx + ss / 2, cy, 90);
-        }
-
-        ctx.font = '10px system-ui';
-        ctx.fillStyle = '#e2e8f0';
-        ctx.textAlign = 'center';
-        ctx.fillText(s.name, cx, cy + sh / 2 + 24);
+function drawReviewQuadRectangle(canvas) {
+    const { ctx, w, h } = setupSmallReviewCanvas(canvas);
+    const cx = w / 2, cy = h / 2;
+    const sw = Math.min(w * 0.55, 120), sh = sw * 0.6;
+    ctx.strokeStyle = '#818cf8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.rect(cx - sw/2, cy - sh/2, sw, sh);
+    ctx.stroke();
+    // Right angle marks
+    const rsq = 7;
+    [[cx - sw/2, cy - sh/2, 1, 1], [cx + sw/2, cy - sh/2, -1, 1],
+     [cx - sw/2, cy + sh/2, 1, -1], [cx + sw/2, cy + sh/2, -1, -1]].forEach(([x, y, dx, dy]) => {
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x + rsq*dx, y);
+        ctx.lineTo(x + rsq*dx, y + rsq*dy);
+        ctx.lineTo(x, y + rsq*dy);
+        ctx.stroke();
     });
+    // Diagonal (show congruent diagonals)
+    ctx.strokeStyle = '#818cf850';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cx - sw/2, cy - sh/2);
+    ctx.lineTo(cx + sw/2, cy + sh/2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + sw/2, cy - sh/2);
+    ctx.lineTo(cx - sw/2, cy + sh/2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+}
 
-    // Hierarchy
-    ctx.font = '11px system-ui';
+function drawReviewQuadRhombus(canvas) {
+    const { ctx, w, h } = setupSmallReviewCanvas(canvas);
+    const cx = w / 2, cy = h / 2;
+    const dw = Math.min(w * 0.28, 55), dh = Math.min(h * 0.38, 55);
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - dh);
+    ctx.lineTo(cx + dw, cy);
+    ctx.lineTo(cx, cy + dh);
+    ctx.lineTo(cx - dw, cy);
+    ctx.closePath();
+    ctx.stroke();
+    // Tick marks on all 4 sides
+    drawTickMark(ctx, cx + dw/2, cy - dh/2, 55);
+    drawTickMark(ctx, cx - dw/2, cy - dh/2, -55);
+    drawTickMark(ctx, cx + dw/2, cy + dh/2, -55);
+    drawTickMark(ctx, cx - dw/2, cy + dh/2, 55);
+    // Perpendicular diagonals
+    ctx.strokeStyle = '#a855f750';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - dh); ctx.lineTo(cx, cy + dh);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx - dw, cy); ctx.lineTo(cx + dw, cy);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // Perpendicular mark at center
+    const rsq = 5;
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx + rsq, cy);
+    ctx.lineTo(cx + rsq, cy - rsq);
+    ctx.lineTo(cx, cy - rsq);
+    ctx.stroke();
+}
+
+function drawReviewQuadSquare(canvas) {
+    const { ctx, w, h } = setupSmallReviewCanvas(canvas);
+    const cx = w / 2, cy = h / 2;
+    const ss = Math.min(w * 0.4, 80);
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.rect(cx - ss/2, cy - ss/2, ss, ss);
+    ctx.stroke();
+    // Right angle mark
+    const rsq = 7;
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - ss/2 + rsq, cy - ss/2);
+    ctx.lineTo(cx - ss/2 + rsq, cy - ss/2 + rsq);
+    ctx.lineTo(cx - ss/2, cy - ss/2 + rsq);
+    ctx.stroke();
+    // Tick marks on all sides
+    drawTickMark(ctx, cx, cy - ss/2, 0);
+    drawTickMark(ctx, cx, cy + ss/2, 0);
+    drawTickMark(ctx, cx - ss/2, cy, 90);
+    drawTickMark(ctx, cx + ss/2, cy, 90);
+}
+
+function drawReviewQuadTrapezoid(canvas) {
+    const { ctx, w, h } = setupSmallReviewCanvas(canvas);
+    const cx = w / 2, cy = h / 2;
+    const bw = Math.min(w * 0.55, 120), tw = bw * 0.55, sh = Math.min(h * 0.5, 60);
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - tw/2, cy - sh/2);
+    ctx.lineTo(cx + tw/2, cy - sh/2);
+    ctx.lineTo(cx + bw/2, cy + sh/2);
+    ctx.lineTo(cx - bw/2, cy + sh/2);
+    ctx.closePath();
+    ctx.stroke();
+    // Parallel marks on top and bottom
+    drawParallelMark(ctx, cx, cy - sh/2, 0);
+    drawParallelMark(ctx, cx, cy + sh/2, 0);
+    // Labels
+    ctx.font = '10px system-ui';
     ctx.fillStyle = '#94a3b8';
     ctx.textAlign = 'center';
-    ctx.fillText('Parallelogram → Rectangle → Square ← Rhombus ← Parallelogram', w / 2, h - 6);
+    ctx.fillText('base₁', cx, cy - sh/2 - 6);
+    ctx.fillText('base₂', cx, cy + sh/2 + 14);
+}
+
+function drawReviewQuadIsoscelesTrap(canvas) {
+    const { ctx, w, h } = setupSmallReviewCanvas(canvas);
+    const cx = w / 2, cy = h / 2;
+    const bw = Math.min(w * 0.55, 120), tw = bw * 0.55, sh = Math.min(h * 0.5, 60);
+    const inset = (bw - tw) / 2;
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - tw/2, cy - sh/2);
+    ctx.lineTo(cx + tw/2, cy - sh/2);
+    ctx.lineTo(cx + bw/2, cy + sh/2);
+    ctx.lineTo(cx - bw/2, cy + sh/2);
+    ctx.closePath();
+    ctx.stroke();
+    // Tick marks on both legs (congruent)
+    const legAngle = Math.atan2(sh, inset) * 180 / Math.PI - 90;
+    drawTickMark(ctx, cx - tw/2 - inset/2, cy, -legAngle);
+    drawTickMark(ctx, cx + tw/2 + inset/2, cy, legAngle);
+    // Base angle arcs
+    ctx.strokeStyle = '#fbbf2480';
+    ctx.lineWidth = 1.5;
+    const arcR = 12;
+    // bottom-left
+    ctx.beginPath();
+    const a1 = Math.atan2(-sh, inset);
+    ctx.arc(cx - bw/2, cy + sh/2, arcR, -Math.PI/2 - 0.3, a1, true);
+    ctx.stroke();
+    // bottom-right
+    ctx.beginPath();
+    const a2 = Math.PI - Math.atan2(-sh, inset);
+    ctx.arc(cx + bw/2, cy + sh/2, arcR, a2, -Math.PI/2 + 0.3);
+    ctx.stroke();
+}
+
+function drawReviewQuadKite(canvas) {
+    const { ctx, w, h } = setupSmallReviewCanvas(canvas);
+    const cx = w / 2, cy = h / 2;
+    const topH = Math.min(h * 0.28, 35), botH = Math.min(h * 0.38, 50);
+    const sideW = Math.min(w * 0.22, 40);
+    ctx.strokeStyle = '#ec4899';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - topH);
+    ctx.lineTo(cx + sideW, cy);
+    ctx.lineTo(cx, cy + botH);
+    ctx.lineTo(cx - sideW, cy);
+    ctx.closePath();
+    ctx.stroke();
+    // Short side ticks (top two)
+    drawTickMark(ctx, cx + sideW/2, cy - topH/2, 55);
+    drawTickMark(ctx, cx - sideW/2, cy - topH/2, -55);
+    // Long side double ticks (bottom two)
+    const a = Math.atan2(botH, sideW) * 180 / Math.PI - 90;
+    drawDoubleTickMark(ctx, cx + sideW/2, cy + botH/2, -a);
+    drawDoubleTickMark(ctx, cx - sideW/2, cy + botH/2, a);
+    // Perpendicular diagonals
+    ctx.strokeStyle = '#ec489950';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - topH); ctx.lineTo(cx, cy + botH);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx - sideW, cy); ctx.lineTo(cx + sideW, cy);
+    ctx.stroke();
+    ctx.setLineDash([]);
+}
+
+function drawDoubleTickMark(ctx, x, y, angle) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle * Math.PI / 180);
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-3, -4); ctx.lineTo(-3, 4);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(3, -4); ctx.lineTo(3, 4);
+    ctx.stroke();
+    ctx.restore();
+}
+
+// Keep old function name as alias for backward compat
+function drawReviewDiagram11a(canvas) {
+    // no-op, replaced by individual type canvases
 }
 
 function drawParallelMark(ctx, x, y, angle) {
@@ -2478,7 +2647,13 @@ function initReviewCanvases(num) {
             '9b': drawReviewDiagram9b,
             '9c': drawReviewDiagram9c,
             '10a': drawReviewDiagram10a,
-            '11a': drawReviewDiagram11a,
+            '11-parallelogram': drawReviewQuadParallelogram,
+            '11-rectangle': drawReviewQuadRectangle,
+            '11-rhombus': drawReviewQuadRhombus,
+            '11-square': drawReviewQuadSquare,
+            '11-trapezoid': drawReviewQuadTrapezoid,
+            '11-isosceles-trap': drawReviewQuadIsoscelesTrap,
+            '11-kite': drawReviewQuadKite,
             '12a': drawReviewDiagram12a,
             '12b': drawReviewDiagram12b,
             '13a': drawReviewDiagram13a,
