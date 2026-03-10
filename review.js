@@ -431,18 +431,18 @@ const REVIEW_TOPICS = {
 
 <div class="review-topic">
     <h3>Parallel Lines Cut by a Transversal</h3>
-    <p>When a transversal crosses two parallel lines, it creates 8 angles with these relationships:</p>
-    <h4>Congruent Angle Pairs</h4>
-    <ul>
-        <li><strong>Corresponding angles</strong> — same position at each intersection</li>
-        <li><strong>Alternate interior angles</strong> — opposite sides, between the parallel lines</li>
-        <li><strong>Alternate exterior angles</strong> — opposite sides, outside the parallel lines</li>
-    </ul>
-    <h4>Supplementary Angle Pairs</h4>
-    <ul>
-        <li><strong>Co-interior (same-side interior) angles</strong> — same side, between the lines → add to 180°</li>
-    </ul>
+    <p>When a transversal crosses two parallel lines, it creates 8 angles:</p>
     <div class="review-diagram"><canvas id="reviewCanvas-7b"></canvas></div>
+    <h4>Congruent Angle Pairs (equal to each other)</h4>
+    <ul>
+        <li><strong>Corresponding angles</strong> (same position at each intersection): ∠1=∠5, ∠2=∠6, ∠3=∠7, ∠4=∠8</li>
+        <li><strong>Alternate interior angles</strong> (opposite sides, between the lines): ∠3=∠6, ∠4=∠5</li>
+        <li><strong>Alternate exterior angles</strong> (opposite sides, outside the lines): ∠1=∠8, ∠2=∠7</li>
+    </ul>
+    <h4>Supplementary Angle Pairs (add to 180°)</h4>
+    <ul>
+        <li><strong>Co-interior / same-side interior angles</strong> (same side, between the lines): ∠3+∠5=180°, ∠4+∠6=180°</li>
+    </ul>
 </div>
 
 <div class="review-topic">
@@ -452,11 +452,11 @@ const REVIEW_TOPICS = {
         <div class="example-solution">Let the smaller angle = x, then the larger = 3x<br>x + 3x = 90°<br>4x = 90° → x = 22.5°<br>Angles: <strong>22.5° and 67.5°</strong></div>
     </div>
     <div class="review-example">
-        <div class="example-problem">Two parallel lines are cut by a transversal. One angle is 65°. Find all 8 angles.</div>
-        <div class="example-solution">Angles come in two groups:<br>Group 1 (congruent): 65°, 65°, 65°, 65°<br>Group 2 (supplementary to group 1): 115°, 115°, 115°, 115°<br>Corresponding, alternate interior, and alternate exterior angles are all <strong>65°</strong>.<br>Co-interior angles are <strong>65° + 115° = 180°</strong>.</div>
+        <div class="example-problem">Two parallel lines are cut by a transversal. ∠2 = 65°. Find ∠3, ∠5, and ∠6.</div>
+        <div class="example-solution">∠3 is supplementary to ∠2 (linear pair): ∠3 = 180° − 65° = <strong>115°</strong><br>∠6 is corresponding to ∠2: ∠6 = <strong>65°</strong><br>∠5 is supplementary to ∠6: ∠5 = 180° − 65° = <strong>115°</strong></div>
     </div>
     <div class="review-example">
-        <div class="example-problem">Vertical angles are formed by two intersecting lines. One angle measures (4x + 10)° and its vertical angle measures (6x − 20)°. Find x.</div>
+        <div class="example-problem">Vertical angles: one measures (4x + 10)°, the other (6x − 20)°. Find x.</div>
         <div class="example-solution">Vertical angles are congruent:<br>4x + 10 = 6x − 20<br>30 = 2x → x = <strong>15</strong><br>Each angle = 4(15) + 10 = <strong>70°</strong></div>
     </div>
 </div>`
@@ -571,7 +571,7 @@ const REVIEW_TOPICS = {
     </div>
     <div class="review-example">
         <div class="example-problem">A 30-60-90 triangle has a short leg of 7. Find the long leg and hypotenuse.</div>
-        <div class="example-solution">Short leg = x = 7<br>Long leg = x√3 = 7√3 ≈ <strong>7√3 ≈ 12.12</strong><br>Hypotenuse = 2x = <strong>14</strong></div>
+        <div class="example-solution">Short leg = x = 7<br>Long leg = x√3 = <strong>7√3 ≈ 12.12</strong><br>Hypotenuse = 2x = <strong>14</strong></div>
     </div>
 </div>`
     },
@@ -918,120 +918,130 @@ function setupReviewCanvas(canvas) {
     return { ctx, w: rect.width, h: rect.height };
 }
 
-function drawRightAngleSquare(ctx, x, y, size, angle1, angle2) {
-    ctx.save();
-    ctx.translate(x, y);
-    const a1 = angle1;
-    const a2 = angle2;
-    ctx.beginPath();
-    ctx.moveTo(Math.cos(a1) * size, Math.sin(a1) * size);
-    ctx.lineTo(Math.cos(a1) * size + Math.cos(a2) * size, Math.sin(a1) * size + Math.sin(a2) * size);
-    ctx.lineTo(Math.cos(a2) * size, Math.sin(a2) * size);
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-    ctx.restore();
-}
-
 // ===== Topic 7: Angles & Lines =====
 
 function drawReviewDiagram7a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Complementary and supplementary angles
-    const cx1 = w * 0.25, cy1 = h * 0.55;
-    const cx2 = w * 0.72, cy2 = h * 0.55;
+    const cy = h * 0.55;
+
+    // === Complementary angles (left side) ===
+    const cx1 = w * 0.25;
     const r = Math.min(w * 0.18, h * 0.35);
 
-    // Complementary angles (add to 90)
     ctx.font = 'bold 13px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.textAlign = 'center';
     ctx.fillText('Complementary (90°)', cx1, 20);
 
-    // Draw the right angle
+    // Horizontal arm (going left from vertex)
     ctx.beginPath();
-    ctx.moveTo(cx1 - r, cy1);
-    ctx.lineTo(cx1, cy1);
-    ctx.lineTo(cx1, cy1 - r);
+    ctx.moveTo(cx1, cy);
+    ctx.lineTo(cx1 + r, cy);
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // Dividing line at 55 degrees
-    const compAngle = 55 * Math.PI / 180;
+    // Vertical arm (going up)
     ctx.beginPath();
-    ctx.moveTo(cx1, cy1);
-    ctx.lineTo(cx1 + Math.cos(Math.PI + compAngle) * r, cy1 - Math.sin(compAngle) * r * 0.7);
+    ctx.moveTo(cx1, cy);
+    ctx.lineTo(cx1, cy - r);
+    ctx.stroke();
+
+    // Dividing ray at 55° from horizontal
+    const compDeg = 55;
+    const compRad = compDeg * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(cx1, cy);
+    ctx.lineTo(cx1 + Math.cos(compRad) * r * 0.85, cy - Math.sin(compRad) * r * 0.85);
     ctx.strokeStyle = '#818cf8';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Right angle square
+    // Right angle square at corner
     const sq = 10;
     ctx.beginPath();
-    ctx.moveTo(cx1 + sq, cy1);
-    ctx.lineTo(cx1 + sq, cy1 - sq);
-    ctx.lineTo(cx1, cy1 - sq);
+    ctx.moveTo(cx1 + sq, cy);
+    ctx.lineTo(cx1 + sq, cy - sq);
+    ctx.lineTo(cx1, cy - sq);
     ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Arc for lower angle (0° to 55°)
+    ctx.beginPath();
+    ctx.arc(cx1, cy, 22, -compRad, 0);
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Arc for upper angle (55° to 90°)
+    ctx.beginPath();
+    ctx.arc(cx1, cy, 28, -Math.PI/2, -compRad);
+    ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
     // Labels
     ctx.font = '12px system-ui';
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('55°', cx1 - 22, cy1 - 18);
-    ctx.fillText('35°', cx1 - 8, cy1 - 42);
+    ctx.fillText('55°', cx1 + 32, cy - 6);
+    ctx.fillStyle = '#10b981';
+    ctx.fillText('35°', cx1 + 14, cy - 32);
 
-    // Supplementary angles (add to 180)
+    // === Supplementary angles (right side) ===
+    const cx2 = w * 0.72;
+
     ctx.font = 'bold 13px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('Supplementary (180°)', cx2, 20);
 
-    // Draw the straight line
+    // Straight line
     ctx.beginPath();
-    ctx.moveTo(cx2 - r, cy2);
-    ctx.lineTo(cx2 + r, cy2);
+    ctx.moveTo(cx2 - r, cy);
+    ctx.lineTo(cx2 + r, cy);
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // Dividing line
-    const suppAngle = 130 * Math.PI / 180;
+    // Ray going up at 130° from the right arm
+    const suppDeg = 50; // the smaller angle from the left
+    const suppRad = suppDeg * Math.PI / 180;
     ctx.beginPath();
-    ctx.moveTo(cx2, cy2);
-    ctx.lineTo(cx2 + Math.cos(Math.PI - suppAngle) * r * 0.9, cy2 - Math.sin(suppAngle) * r * 0.9);
+    ctx.moveTo(cx2, cy);
+    ctx.lineTo(cx2 - Math.cos(suppRad) * r * 0.9, cy - Math.sin(suppRad) * r * 0.9);
     ctx.strokeStyle = '#818cf8';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Arc for angles
+    // Arc for left angle (130°)
     ctx.beginPath();
-    ctx.arc(cx2, cy2, 25, -suppAngle, 0);
+    ctx.arc(cx2, cy, 25, -(Math.PI - suppRad), 0);
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
+    // Arc for right angle (50°)
     ctx.beginPath();
-    ctx.arc(cx2, cy2, 30, Math.PI, 2 * Math.PI - suppAngle);
+    ctx.arc(cx2, cy, 30, -Math.PI, -(Math.PI - suppRad));
     ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
+    // Labels
     ctx.font = '12px system-ui';
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('130°', cx2 + 10, cy2 - 30);
+    ctx.fillText('130°', cx2 + 14, cy - 24);
     ctx.fillStyle = '#10b981';
-    ctx.fillText('50°', cx2 - 40, cy2 - 15);
+    ctx.fillText('50°', cx2 - 38, cy - 20);
 }
 
 function drawReviewDiagram7b(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
     // Parallel lines cut by a transversal
     const margin = 40;
-    const lineLen = w - margin * 2;
 
     // Two parallel lines
-    const y1 = h * 0.3, y2 = h * 0.7;
+    const y1 = h * 0.32, y2 = h * 0.68;
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
@@ -1043,60 +1053,76 @@ function drawReviewDiagram7b(canvas) {
     ctx.lineTo(w - margin, y2);
     ctx.stroke();
 
-    // Parallel arrows
+    // Line labels
+    ctx.font = 'bold 13px system-ui';
     ctx.fillStyle = '#38bdf8';
-    ctx.font = '14px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText('ℓ', margin - 12, y1 + 5);
+    ctx.fillText('m', margin - 16, y2 + 5);
+
+    // Parallel arrows on right
     ctx.fillText('▸▸', w - margin + 5, y1 + 5);
     ctx.fillText('▸▸', w - margin + 5, y2 + 5);
 
-    // Transversal
-    const txOff = 60;
-    const tx1 = w * 0.35, tx2 = w * 0.65;
+    // Transversal - line going from upper-left to lower-right
+    // The transversal angle from horizontal: ~65°
+    const tAngle = 65 * Math.PI / 180;
+    const tLen = (y2 - y1) / Math.sin(tAngle); // length between intersections
+    const xShift = (y2 - y1) / Math.tan(tAngle); // horizontal shift between intersections
+
+    // Intersection points
+    const ix1 = w * 0.42; // x of intersection with top line
+    const ix2 = ix1 + xShift; // x of intersection with bottom line
+
+    // Draw transversal extending beyond both lines
+    const ext = 30;
     ctx.strokeStyle = '#a855f7';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(tx1 - 10, h * 0.05);
-    ctx.lineTo(tx2 + 10, h * 0.95);
+    ctx.moveTo(ix1 - ext * Math.cos(tAngle), y1 - ext * Math.sin(tAngle));
+    ctx.lineTo(ix2 + ext * Math.cos(tAngle), y2 + ext * Math.sin(tAngle));
     ctx.stroke();
 
-    // Calculate intersection points
-    const slope = (h * 0.95 - h * 0.05) / (tx2 + 10 - tx1 + 10);
-    const ix1x = tx1 - 10 + (y1 - h * 0.05) / slope;
-    const ix2x = tx1 - 10 + (y2 - h * 0.05) / slope;
+    // Transversal label
+    ctx.font = 'bold 13px system-ui';
+    ctx.fillStyle = '#a855f7';
+    ctx.textAlign = 'left';
+    ctx.fillText('t', ix1 - ext * Math.cos(tAngle) - 4, y1 - ext * Math.sin(tAngle) - 4);
+
+    // Intersection dots
+    ctx.fillStyle = '#e2e8f0';
+    ctx.beginPath(); ctx.arc(ix1, y1, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(ix2, y2, 3, 0, Math.PI * 2); ctx.fill();
 
     // Label angles 1-8
-    ctx.font = 'bold 12px system-ui';
-    const labels = [
-        { n: '1', x: ix1x - 18, y: y1 - 8, c: '#fbbf24' },
-        { n: '2', x: ix1x + 10, y: y1 - 8, c: '#fbbf24' },
-        { n: '3', x: ix1x - 18, y: y1 + 16, c: '#10b981' },
-        { n: '4', x: ix1x + 10, y: y1 + 16, c: '#10b981' },
-        { n: '5', x: ix2x - 18, y: y2 - 8, c: '#fbbf24' },
-        { n: '6', x: ix2x + 10, y: y2 - 8, c: '#fbbf24' },
-        { n: '7', x: ix2x - 18, y: y2 + 16, c: '#10b981' },
-        { n: '8', x: ix2x + 10, y: y2 + 16, c: '#10b981' }
-    ];
-    labels.forEach(l => {
-        ctx.fillStyle = l.c;
-        ctx.textAlign = 'center';
-        ctx.fillText(l.n, l.x, l.y);
-    });
-
-    // Legend
-    ctx.font = '11px system-ui';
-    ctx.textAlign = 'left';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('Corresponding: ∠1=∠5, ∠2=∠6, ∠3=∠7, ∠4=∠8', margin, h - 8);
+    // At top intersection: angles numbered counterclockwise from upper-left
+    // Standard numbering:
+    // 1 = above line, left of transversal
+    // 2 = above line, right of transversal
+    // 3 = below line, left of transversal
+    // 4 = below line, right of transversal
+    // Same pattern at bottom: 5,6,7,8
+    ctx.font = 'bold 13px system-ui';
+    ctx.textAlign = 'center';
+    const offset = 16;
+    // Top intersection
+    ctx.fillStyle = '#fbbf24'; ctx.fillText('1', ix1 - offset, y1 - 8);
+    ctx.fillStyle = '#fbbf24'; ctx.fillText('2', ix1 + offset + 4, y1 - 8);
+    ctx.fillStyle = '#10b981'; ctx.fillText('3', ix1 - offset - 4, y1 + 18);
+    ctx.fillStyle = '#10b981'; ctx.fillText('4', ix1 + offset, y1 + 18);
+    // Bottom intersection
+    ctx.fillStyle = '#fbbf24'; ctx.fillText('5', ix2 - offset, y2 - 8);
+    ctx.fillStyle = '#fbbf24'; ctx.fillText('6', ix2 + offset + 4, y2 - 8);
+    ctx.fillStyle = '#10b981'; ctx.fillText('7', ix2 - offset - 4, y2 + 18);
+    ctx.fillStyle = '#10b981'; ctx.fillText('8', ix2 + offset, y2 + 18);
 }
 
 // ===== Topic 8: Triangles =====
 
 function drawReviewDiagram8a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Three triangle types side by side
     const triW = w / 3;
     const topY = 45, botY = h - 35;
-    const triH = botY - topY;
 
     ctx.font = 'bold 12px system-ui';
     ctx.textAlign = 'center';
@@ -1104,7 +1130,7 @@ function drawReviewDiagram8a(canvas) {
 
     // Equilateral
     const eq_cx = triW * 0.5;
-    const eq_side = Math.min(triW * 0.6, triH * 0.8);
+    const eq_side = Math.min(triW * 0.6, (botY - topY) * 0.8);
     const eq_h = eq_side * Math.sqrt(3) / 2;
     const eq_top = botY - eq_h;
     ctx.fillStyle = '#e2e8f0';
@@ -1116,7 +1142,7 @@ function drawReviewDiagram8a(canvas) {
     ctx.lineTo(eq_cx + eq_side / 2, botY);
     ctx.closePath();
     ctx.stroke();
-    // Tick marks (all sides equal)
+    // Tick marks (all sides equal - single tick)
     drawTickMark(ctx, eq_cx - eq_side / 4, (eq_top + botY) / 2 - 2, -60);
     drawTickMark(ctx, eq_cx + eq_side / 4, (eq_top + botY) / 2 - 2, 60);
     drawTickMark(ctx, eq_cx, botY + 2, 0);
@@ -1141,6 +1167,9 @@ function drawReviewDiagram8a(canvas) {
     // Double tick on equal sides
     drawTickMark(ctx, iso_cx - iso_base / 4 - 2, (iso_top + botY) / 2, -72, 2);
     drawTickMark(ctx, iso_cx + iso_base / 4 + 2, (iso_top + botY) / 2, 72, 2);
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('2 equal sides', iso_cx, botY + 16);
 
     // Scalene
     const sc_cx = triW * 2.5;
@@ -1156,7 +1185,7 @@ function drawReviewDiagram8a(canvas) {
     ctx.stroke();
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#94a3b8';
-    ctx.fillText('all sides different', sc_cx, botY + 14);
+    ctx.fillText('no equal sides', sc_cx, botY + 16);
 }
 
 function drawTickMark(ctx, x, y, angleDeg, count) {
@@ -1180,10 +1209,11 @@ function drawTickMark(ctx, x, y, angleDeg, count) {
 function drawReviewDiagram8b(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
     // Exterior angle theorem
-    const bx = w * 0.2, by = h * 0.7;
-    const cx = w * 0.6, cy = h * 0.7;
-    const ax = w * 0.4, ay = h * 0.18;
-    const dx = w * 0.82, dy = h * 0.7; // extension point
+    // Triangle vertices
+    const bx = w * 0.2, by = h * 0.72;
+    const cx = w * 0.58, cy = h * 0.72;
+    const ax = w * 0.38, ay = h * 0.18;
+    const dx = w * 0.82, dy = h * 0.72; // extension point
 
     ctx.font = 'bold 13px system-ui';
     ctx.fillStyle = '#e2e8f0';
@@ -1200,7 +1230,7 @@ function drawReviewDiagram8b(canvas) {
     ctx.closePath();
     ctx.stroke();
 
-    // Extension line
+    // Extension line from C
     ctx.strokeStyle = '#a855f7';
     ctx.lineWidth = 2;
     ctx.setLineDash([6, 4]);
@@ -1210,16 +1240,45 @@ function drawReviewDiagram8b(canvas) {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Label angles
+    // Angle arcs
+    // Angle at B (interior) - angle between BA and BC
+    const angB_to_A = Math.atan2(ay - by, ax - bx);
+    const angB_to_C = Math.atan2(cy - by, cx - bx);
+    ctx.beginPath();
+    ctx.arc(bx, by, 20, angB_to_C, angB_to_A);
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Angle at A (interior) - angle between AB and AC
+    const angA_to_B = Math.atan2(by - ay, bx - ax);
+    const angA_to_C = Math.atan2(cy - ay, cx - ax);
+    ctx.beginPath();
+    ctx.arc(ax, ay, 18, angA_to_C, angA_to_B);
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Exterior angle at C - angle between CA (going up) and CD (extension going right)
+    const angC_to_A = Math.atan2(ay - cy, ax - cx);
+    const angC_to_D = Math.atan2(dy - cy, dx - cx); // = 0 since same y
+    ctx.beginPath();
+    ctx.arc(cx, cy, 22, angC_to_A, angC_to_D);
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Angle labels
     ctx.font = '12px system-ui';
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('a', bx + 25, by - 12);
-    ctx.fillText('b', ax + 2, ay + 28);
+    ctx.textAlign = 'center';
+    ctx.fillText('a', bx + 28, by - 10);
+    ctx.fillText('b', ax + 4, ay + 30);
     ctx.fillStyle = '#10b981';
     ctx.font = 'bold 13px system-ui';
-    ctx.fillText('c', cx + 18, cy - 12);
+    ctx.fillText('c', cx + 24, cy - 14);
 
-    // Labels
+    // Vertex labels
     ctx.font = '12px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('A', ax - 2, ay - 8);
@@ -1238,10 +1297,11 @@ function drawReviewDiagram8b(canvas) {
 function drawReviewDiagram9a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
     // Right triangle with a, b, c labeled
-    const margin = 50;
-    const bx = margin, by = h - 40;
-    const cx = w - margin - 20, cy = h - 40;
-    const ax = margin, ay = 50;
+    // Right angle at bottom-left
+    const margin = 55;
+    const bx = margin, by = h - 40;        // bottom-left (right angle vertex)
+    const cx = w - margin - 20, cy = h - 40; // bottom-right
+    const ax = margin, ay = 50;              // top-left
 
     ctx.font = 'bold 13px system-ui';
     ctx.fillStyle = '#e2e8f0';
@@ -1258,8 +1318,8 @@ function drawReviewDiagram9a(canvas) {
     ctx.closePath();
     ctx.stroke();
 
-    // Right angle square
-    const sq = 10;
+    // Right angle square at bottom-left
+    const sq = 12;
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -1268,23 +1328,27 @@ function drawReviewDiagram9a(canvas) {
     ctx.lineTo(bx, by - sq);
     ctx.stroke();
 
-    // Labels
+    // Side labels
     ctx.font = 'bold 16px system-ui';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#38bdf8';
-    ctx.fillText('a', bx - 16, (ay + by) / 2);
-    ctx.fillText('b', (bx + cx) / 2, by + 22);
+    ctx.fillText('a', bx - 18, (ay + by) / 2);     // left side (vertical leg)
+    ctx.fillText('b', (bx + cx) / 2, by + 24);      // bottom side (horizontal leg)
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('c', (ax + cx) / 2 + 15, (ay + cy) / 2 - 8);
+    ctx.fillText('c', (ax + cx) / 2 + 18, (ay + cy) / 2 - 10); // hypotenuse
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('(hypotenuse)', (ax + cx) / 2 + 18, (ay + cy) / 2 + 6);
 }
 
 function drawReviewDiagram9b(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
     // SOH-CAH-TOA triangle
-    const margin = 60;
-    const bx = margin, by = h - 45;
-    const cx = w - margin, cy = h - 45;
-    const ax = margin, ay = 50;
+    // Right angle at bottom-left, θ at bottom-right
+    const margin = 65;
+    const bx = margin, by = h - 45;        // bottom-left (right angle)
+    const cx = w - margin, cy = h - 45;    // bottom-right (θ is here)
+    const ax = margin, ay = 55;            // top-left
 
     ctx.font = 'bold 13px system-ui';
     ctx.fillStyle = '#e2e8f0';
@@ -1301,8 +1365,8 @@ function drawReviewDiagram9b(canvas) {
     ctx.closePath();
     ctx.stroke();
 
-    // Right angle square
-    const sq = 10;
+    // Right angle square at bottom-left
+    const sq = 12;
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -1311,57 +1375,70 @@ function drawReviewDiagram9b(canvas) {
     ctx.lineTo(bx, by - sq);
     ctx.stroke();
 
-    // Theta arc at C
+    // Theta arc at bottom-right (C)
+    const angC_to_B = Math.PI; // points left along bottom
+    const angC_to_A = Math.atan2(ay - cy, ax - cx); // points to top-left
     ctx.beginPath();
-    const thetaStart = Math.atan2(ay - cy, ax - cx);
-    ctx.arc(cx, cy, 28, Math.PI, thetaStart);
+    ctx.arc(cx, cy, 28, angC_to_A, angC_to_B);
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.font = 'bold 14px system-ui';
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('θ', cx - 38, cy - 8);
+    ctx.fillText('θ', cx - 38, cy - 10);
 
-    // Labels
+    // Side labels
     ctx.font = 'bold 14px system-ui';
     ctx.textAlign = 'center';
+
+    // Opposite = left side (vertical, far from θ)
     ctx.fillStyle = '#a855f7';
-    ctx.fillText('Opposite', bx - 2, (ay + by) / 2);
-    ctx.textAlign = 'center';
     ctx.save();
-    ctx.translate((ax + cx) / 2 + 12, (ay + cy) / 2 - 10);
-    ctx.rotate(Math.atan2(cy - ay, cx - ax));
-    ctx.fillStyle = '#10b981';
-    ctx.fillText('Hypotenuse', 0, -8);
+    ctx.translate(bx - 14, (ay + by) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Opposite', 0, 0);
     ctx.restore();
+
+    // Adjacent = bottom side (next to θ)
     ctx.fillStyle = '#38bdf8';
     ctx.fillText('Adjacent', (bx + cx) / 2, by + 22);
+
+    // Hypotenuse = diagonal
+    ctx.fillStyle = '#10b981';
+    ctx.save();
+    const hypMidX = (ax + cx) / 2;
+    const hypMidY = (ay + cy) / 2;
+    const hypAngle = Math.atan2(cy - ay, cx - ax);
+    ctx.translate(hypMidX + 12, hypMidY - 12);
+    ctx.rotate(hypAngle);
+    ctx.fillText('Hypotenuse', 0, 0);
+    ctx.restore();
 }
 
 function drawReviewDiagram9c(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // 45-45-90 and 30-60-90 side by side
     const halfW = w / 2;
-    const topY = 40, botY = h - 35;
-    const triH = botY - topY;
+    const topY = 42, botY = h - 38;
 
     ctx.font = 'bold 12px system-ui';
     ctx.textAlign = 'center';
 
-    // 45-45-90
+    // ===== 45-45-90 (left side) =====
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('45-45-90', halfW * 0.5, 18);
-    const s1 = Math.min(halfW * 0.55, triH * 0.85);
+    const s1 = Math.min(halfW * 0.5, (botY - topY) * 0.85);
+    // Right angle at bottom-left
     const lx = halfW * 0.2, ly = botY;
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(lx, ly - s1);
-    ctx.lineTo(lx, ly);
-    ctx.lineTo(lx + s1, ly);
+    ctx.moveTo(lx, ly - s1);       // top
+    ctx.lineTo(lx, ly);             // bottom-left (right angle)
+    ctx.lineTo(lx + s1, ly);        // bottom-right
     ctx.closePath();
     ctx.stroke();
-    // Right angle
+
+    // Right angle square at bottom-left
     const sq = 8;
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
@@ -1371,37 +1448,47 @@ function drawReviewDiagram9c(canvas) {
     ctx.lineTo(lx, ly - sq);
     ctx.stroke();
 
+    // Side labels
     ctx.font = '12px system-ui';
     ctx.fillStyle = '#38bdf8';
     ctx.textAlign = 'right';
-    ctx.fillText('x', lx - 6, ly - s1 / 2 + 4);
+    ctx.fillText('x', lx - 8, ly - s1 / 2 + 4);      // left leg
     ctx.textAlign = 'center';
-    ctx.fillText('x', lx + s1 / 2, ly + 16);
+    ctx.fillText('x', lx + s1 / 2, ly + 16);           // bottom leg
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('x√2', lx + s1 / 2 + 12, ly - s1 / 2 - 4);
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('45°', lx + 18, ly - s1 + 18);
-    ctx.fillText('45°', lx + s1 - 14, ly - 10);
+    ctx.fillText('x√2', lx + s1 / 2 + 14, ly - s1 / 2 - 6); // hypotenuse
 
-    // 30-60-90
+    // Angle labels at the correct vertices
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('45°', lx + 20, ly - s1 + 16);       // top vertex
+    ctx.fillText('45°', lx + s1 - 18, ly - 10);       // bottom-right vertex
+
+    // ===== 30-60-90 (right side) =====
     ctx.font = 'bold 12px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.textAlign = 'center';
     ctx.fillText('30-60-90', halfW * 1.5, 18);
-    const shortLeg = s1 * 0.55;
+
+    // Short leg is horizontal (bottom), long leg is vertical (left), hypotenuse is diagonal
+    // Right angle at bottom-left
+    const shortLeg = s1 * 0.5;
     const longLeg = shortLeg * Math.sqrt(3);
+    const actualLong = Math.min(longLeg, (botY - topY) * 0.85);
+    const actualShort = actualLong / Math.sqrt(3);
+
     const rx = halfW + halfW * 0.2, ry = botY;
-    const actualH = Math.min(longLeg, triH * 0.85);
-    const actualShort = actualH / Math.sqrt(3);
     ctx.strokeStyle = '#818cf8';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(rx, ry - actualH);
-    ctx.lineTo(rx, ry);
-    ctx.lineTo(rx + actualShort * 2.2, ry);
+    ctx.moveTo(rx, ry - actualLong);           // top (30° angle here)
+    ctx.lineTo(rx, ry);                         // bottom-left (right angle)
+    ctx.lineTo(rx + actualShort * 2, ry);       // bottom-right (60° angle here)
     ctx.closePath();
     ctx.stroke();
-    // Right angle
+
+    // Right angle square at bottom-left
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -1410,24 +1497,27 @@ function drawReviewDiagram9c(canvas) {
     ctx.lineTo(rx, ry - sq);
     ctx.stroke();
 
+    // Side labels
     ctx.font = '12px system-ui';
     ctx.fillStyle = '#818cf8';
     ctx.textAlign = 'right';
-    ctx.fillText('x√3', rx - 6, ry - actualH / 2 + 4);
+    ctx.fillText('x√3', rx - 8, ry - actualLong / 2 + 4); // long leg (vertical)
     ctx.textAlign = 'center';
-    ctx.fillText('x', rx + actualShort * 1.1, ry + 16);
+    ctx.fillText('x', rx + actualShort, ry + 16);           // short leg (horizontal)
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('2x', rx + actualShort * 1.1 + 10, ry - actualH / 2 - 4);
+    ctx.fillText('2x', rx + actualShort + 14, ry - actualLong / 2 - 6); // hypotenuse
+
+    // Angle labels - 30° at top vertex (opposite short leg), 60° at bottom-right (opposite long leg)
     ctx.fillStyle = '#94a3b8';
-    ctx.fillText('30°', rx + 20, ry - actualH + 20);
-    ctx.fillText('60°', rx + actualShort * 2.2 - 18, ry - 10);
+    ctx.font = '11px system-ui';
+    ctx.fillText('30°', rx + 22, ry - actualLong + 16);     // top vertex
+    ctx.fillText('60°', rx + actualShort * 2 - 22, ry - 10); // bottom-right vertex
 }
 
 // ===== Topic 10: Similar Triangles =====
 
 function drawReviewDiagram10a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Two similar triangles with proportional sides
     ctx.font = 'bold 13px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.textAlign = 'center';
@@ -1452,6 +1542,22 @@ function drawReviewDiagram10a(canvas) {
     ctx.fillText('4', s_bx - 10, s_by - s_h / 2 + 6);
     ctx.fillText('5', s_bx + s_w * 0.7 + 10, s_by - s_h / 2);
 
+    // Angle arcs on small triangle
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    const s_ax = s_bx + s_w * 0.3, s_ay = s_by - s_h;
+    // Angle at bottom-left
+    const s_bl_to_top = Math.atan2(s_ay - s_by, s_ax - s_bx);
+    const s_bl_to_right = 0;
+    ctx.beginPath();
+    ctx.arc(s_bx, s_by, 12, s_bl_to_top, s_bl_to_right);
+    ctx.stroke();
+    // Angle at bottom-right
+    const s_br_to_top = Math.atan2(s_ay - s_by, s_ax - (s_bx + s_w));
+    ctx.beginPath();
+    ctx.arc(s_bx + s_w, s_by, 12, Math.PI, s_br_to_top);
+    ctx.stroke();
+
     // "~" symbol
     ctx.font = 'bold 20px system-ui';
     ctx.fillStyle = '#fbbf24';
@@ -1475,13 +1581,18 @@ function drawReviewDiagram10a(canvas) {
     ctx.fillText('8', l_bx - 10, l_by - l_h / 2 + 6);
     ctx.fillText('10', l_bx + l_w * 0.7 + 14, l_by - l_h / 2);
 
-    // Angle marks (matching)
-    ctx.font = '11px system-ui';
-    ctx.fillStyle = '#fbbf24';
-    ctx.fillText('α', s_bx + 16, s_by - 8);
-    ctx.fillText('α', l_bx + 22, l_by - 10);
-    ctx.fillText('β', s_bx + s_w - 12, s_by - 8);
-    ctx.fillText('β', l_bx + l_w - 16, l_by - 10);
+    // Angle arcs on large triangle (matching)
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    const l_ax = l_bx + l_w * 0.3, l_ay = l_by - l_h;
+    const l_bl_to_top = Math.atan2(l_ay - l_by, l_ax - l_bx);
+    ctx.beginPath();
+    ctx.arc(l_bx, l_by, 14, l_bl_to_top, 0);
+    ctx.stroke();
+    const l_br_to_top = Math.atan2(l_ay - l_by, l_ax - (l_bx + l_w));
+    ctx.beginPath();
+    ctx.arc(l_bx + l_w, l_by, 14, Math.PI, l_br_to_top);
+    ctx.stroke();
 
     // Scale factor label
     ctx.font = 'bold 12px system-ui';
@@ -1494,7 +1605,6 @@ function drawReviewDiagram10a(canvas) {
 
 function drawReviewDiagram11a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Quadrilateral types with marks
     const shapes = [
         { name: 'Parallelogram', x: w * 0.17 },
         { name: 'Rectangle', x: w * 0.42 },
@@ -1514,11 +1624,10 @@ function drawReviewDiagram11a(canvas) {
         const colors = ['#38bdf8', '#818cf8', '#a855f7', '#10b981'];
         ctx.strokeStyle = colors[i];
         ctx.lineWidth = 2.5;
-        const skew = i === 0 ? sw * 0.2 : 0;
-        const sideW = i >= 2 ? sh : sw;
 
         if (i === 0) {
             // Parallelogram (skewed)
+            const skew = sw * 0.2;
             ctx.beginPath();
             ctx.moveTo(cx - sw / 2 + skew, cy - sh / 2);
             ctx.lineTo(cx + sw / 2 + skew, cy - sh / 2);
@@ -1526,7 +1635,7 @@ function drawReviewDiagram11a(canvas) {
             ctx.lineTo(cx - sw / 2 - skew, cy + sh / 2);
             ctx.closePath();
             ctx.stroke();
-            // Parallel marks
+            // Parallel marks on top and bottom
             drawParallelMark(ctx, cx, cy - sh / 2, 0);
             drawParallelMark(ctx, cx, cy + sh / 2, 0);
         } else if (i === 1) {
@@ -1534,53 +1643,64 @@ function drawReviewDiagram11a(canvas) {
             ctx.beginPath();
             ctx.rect(cx - sw / 2, cy - sh / 2, sw, sh);
             ctx.stroke();
-            // Right angle marks
-            const sq = 6;
+            // Right angle marks at all corners
+            const rsq = 6;
             [[cx - sw / 2, cy - sh / 2, 1, 1], [cx + sw / 2, cy - sh / 2, -1, 1],
              [cx - sw / 2, cy + sh / 2, 1, -1], [cx + sw / 2, cy + sh / 2, -1, -1]].forEach(([x, y, dx, dy]) => {
                 ctx.strokeStyle = '#fbbf24';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.moveTo(x + sq * dx, y);
-                ctx.lineTo(x + sq * dx, y + sq * dy);
-                ctx.lineTo(x, y + sq * dy);
+                ctx.moveTo(x + rsq * dx, y);
+                ctx.lineTo(x + rsq * dx, y + rsq * dy);
+                ctx.lineTo(x, y + rsq * dy);
                 ctx.stroke();
             });
             ctx.strokeStyle = colors[i];
         } else if (i === 2) {
-            // Rhombus
+            // Rhombus (diamond shape)
+            const dh = sh / 2 + 8;
+            const dw = sw / 2 - 2;
             ctx.beginPath();
-            ctx.moveTo(cx, cy - sh / 2 - 5);
-            ctx.lineTo(cx + sideW / 2, cy);
-            ctx.lineTo(cx, cy + sh / 2 + 5);
-            ctx.lineTo(cx - sideW / 2, cy);
+            ctx.moveTo(cx, cy - dh);
+            ctx.lineTo(cx + dw, cy);
+            ctx.lineTo(cx, cy + dh);
+            ctx.lineTo(cx - dw, cy);
             ctx.closePath();
             ctx.stroke();
+            // Single tick on all 4 sides (all equal)
+            drawTickMark(ctx, cx + dw / 2, cy - dh / 2, 55);
+            drawTickMark(ctx, cx - dw / 2, cy - dh / 2, -55);
+            drawTickMark(ctx, cx + dw / 2, cy + dh / 2, -55);
+            drawTickMark(ctx, cx - dw / 2, cy + dh / 2, 55);
         } else {
             // Square
             const ss = sh * 0.8;
             ctx.beginPath();
             ctx.rect(cx - ss / 2, cy - ss / 2, ss, ss);
             ctx.stroke();
-            // Right angle + tick marks
-            const sq = 5;
+            // Right angle mark
+            const rsq = 5;
             ctx.strokeStyle = '#fbbf24';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(cx - ss / 2 + sq, cy - ss / 2);
-            ctx.lineTo(cx - ss / 2 + sq, cy - ss / 2 + sq);
-            ctx.lineTo(cx - ss / 2, cy - ss / 2 + sq);
+            ctx.moveTo(cx - ss / 2 + rsq, cy - ss / 2);
+            ctx.lineTo(cx - ss / 2 + rsq, cy - ss / 2 + rsq);
+            ctx.lineTo(cx - ss / 2, cy - ss / 2 + rsq);
             ctx.stroke();
+            // Tick marks on all sides
+            drawTickMark(ctx, cx, cy - ss / 2, 0);
+            drawTickMark(ctx, cx, cy + ss / 2, 0);
+            drawTickMark(ctx, cx - ss / 2, cy, 90);
+            drawTickMark(ctx, cx + ss / 2, cy, 90);
         }
 
         ctx.font = '10px system-ui';
         ctx.fillStyle = '#e2e8f0';
-        ctx.fillText(s.name, cx, cy + sh / 2 + 22);
+        ctx.textAlign = 'center';
+        ctx.fillText(s.name, cx, cy + sh / 2 + 24);
     });
 
-    // Hierarchy arrows
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 1;
+    // Hierarchy
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#94a3b8';
     ctx.textAlign = 'center';
@@ -1608,7 +1728,6 @@ function drawParallelMark(ctx, x, y, angle) {
 
 function drawReviewDiagram12a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Circle with radius, diameter, chord, tangent, secant
     const cx = w * 0.45, cy = h * 0.5;
     const r = Math.min(w * 0.25, h * 0.35);
 
@@ -1629,20 +1748,23 @@ function drawReviewDiagram12a(canvas) {
     ctx.beginPath();
     ctx.arc(cx, cy, 3, 0, Math.PI * 2);
     ctx.fill();
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('center', cx + 2, cy + 14);
 
-    // Radius
+    // Radius (from center going upper-right)
     ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 2;
+    const rAngle = -Math.PI / 4;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    const rAngle = -Math.PI / 4;
     ctx.lineTo(cx + Math.cos(rAngle) * r, cy + Math.sin(rAngle) * r);
     ctx.stroke();
     ctx.font = 'bold 12px system-ui';
     ctx.fillStyle = '#10b981';
-    ctx.fillText('r', cx + Math.cos(rAngle) * r * 0.5 + 8, cy + Math.sin(rAngle) * r * 0.5);
+    ctx.fillText('radius', cx + Math.cos(rAngle) * r * 0.5 + 14, cy + Math.sin(rAngle) * r * 0.5 + 2);
 
-    // Diameter
+    // Diameter (horizontal through center)
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -1651,9 +1773,9 @@ function drawReviewDiagram12a(canvas) {
     ctx.stroke();
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('diameter', cx, cy + 14);
+    ctx.fillText('diameter', cx, cy - 10);
 
-    // Chord
+    // Chord (does not pass through center)
     const chordAngle1 = Math.PI * 0.7, chordAngle2 = Math.PI * 1.4;
     ctx.strokeStyle = '#a855f7';
     ctx.lineWidth = 2;
@@ -1663,10 +1785,9 @@ function drawReviewDiagram12a(canvas) {
     ctx.stroke();
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#a855f7';
-    ctx.fillText('chord', cx - r * 0.4, cy + r * 0.75);
+    ctx.fillText('chord', cx - r * 0.35, cy + r * 0.78);
 
-    // Tangent line
-    const tAngle = Math.PI / 2;
+    // Tangent line (vertical at right side of circle)
     const tx = cx + r, ty = cy;
     ctx.strokeStyle = '#818cf8';
     ctx.lineWidth = 2;
@@ -1685,26 +1806,11 @@ function drawReviewDiagram12a(canvas) {
     ctx.stroke();
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#818cf8';
-    ctx.fillText('tangent', tx + 6, ty - r * 0.5);
-
-    // Secant
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([4, 3]);
-    const sAngle1 = Math.PI * 0.15, sAngle2 = Math.PI * 0.85;
-    const sx1 = cx + Math.cos(sAngle1) * r, sy1 = cy + Math.sin(sAngle1) * r;
-    const sx2 = cx + Math.cos(sAngle2) * r, sy2 = cy + Math.sin(sAngle2) * r;
-    const dx = sx2 - sx1, dy2 = sy2 - sy1;
-    ctx.beginPath();
-    ctx.moveTo(sx1 - dx * 0.3, sy1 - dy2 * 0.3);
-    ctx.lineTo(sx2 + dx * 0.3, sy2 + dy2 * 0.3);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.fillText('tangent', tx + 8, ty - r * 0.5);
 }
 
 function drawReviewDiagram12b(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Central angle vs inscribed angle
     const cx1 = w * 0.3, cx2 = w * 0.72;
     const cy1 = h * 0.55, cy2 = h * 0.55;
     const r = Math.min(w * 0.18, h * 0.32);
@@ -1713,7 +1819,7 @@ function drawReviewDiagram12b(canvas) {
     ctx.fillStyle = '#e2e8f0';
     ctx.textAlign = 'center';
 
-    // Central angle
+    // === Central Angle (left) ===
     ctx.fillText('Central Angle', cx1, 18);
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2;
@@ -1727,30 +1833,37 @@ function drawReviewDiagram12b(canvas) {
     ctx.arc(cx1, cy1, 3, 0, Math.PI * 2);
     ctx.fill();
 
-    // Two radii forming central angle
-    const a1 = -Math.PI * 0.2, a2 = -Math.PI * 0.8;
+    // Two radii forming central angle (80°)
+    const ca1 = -Math.PI * 0.15, ca2 = -Math.PI * 0.6;
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(cx1 + Math.cos(a1) * r, cy1 + Math.sin(a1) * r);
+    ctx.moveTo(cx1 + Math.cos(ca1) * r, cy1 + Math.sin(ca1) * r);
     ctx.lineTo(cx1, cy1);
-    ctx.lineTo(cx1 + Math.cos(a2) * r, cy1 + Math.sin(a2) * r);
+    ctx.lineTo(cx1 + Math.cos(ca2) * r, cy1 + Math.sin(ca2) * r);
     ctx.stroke();
 
-    // Arc
-    ctx.strokeStyle = '#10b981';
-    ctx.lineWidth = 3;
+    // Arc indicator
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.arc(cx1, cy1, r, a2, a1);
+    ctx.arc(cx1, cy1, 16, ca2, ca1);
+    ctx.stroke();
+
+    // Intercepted arc (thicker on circle)
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(cx1, cy1, r, ca2, ca1);
     ctx.stroke();
 
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('θ', cx1 + 5, cy1 - 12);
+    ctx.fillText('80°', cx1 + 6, cy1 - 18);
     ctx.fillStyle = '#10b981';
-    ctx.fillText('arc = θ', cx1, 38);
+    ctx.fillText('arc = 80°', cx1, 38);
 
-    // Inscribed angle
+    // === Inscribed Angle (right) ===
     ctx.font = 'bold 12px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('Inscribed Angle', cx2, 18);
@@ -1760,11 +1873,13 @@ function drawReviewDiagram12b(canvas) {
     ctx.arc(cx2, cy2, r, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Inscribed angle from point on circle
-    const ia1 = -Math.PI * 0.15, ia2 = -Math.PI * 0.85;
-    const iVertex = Math.PI * 0.6; // vertex on circle
+    // Inscribed angle: vertex on circle, same intercepted arc
+    const ia1 = -Math.PI * 0.15, ia2 = -Math.PI * 0.6;
+    const iVertex = Math.PI * 0.55; // vertex on bottom of circle
     const vx = cx2 + Math.cos(iVertex) * r;
     const vy = cy2 + Math.sin(iVertex) * r;
+
+    // Two chords from vertex to endpoints of arc
     ctx.strokeStyle = '#a855f7';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -1773,25 +1888,39 @@ function drawReviewDiagram12b(canvas) {
     ctx.lineTo(cx2 + Math.cos(ia2) * r, cy2 + Math.sin(ia2) * r);
     ctx.stroke();
 
-    // Arc
+    // Angle arc at vertex
+    const vToA1 = Math.atan2(cy2 + Math.sin(ia1) * r - vy, cx2 + Math.cos(ia1) * r - vx);
+    const vToA2 = Math.atan2(cy2 + Math.sin(ia2) * r - vy, cx2 + Math.cos(ia2) * r - vx);
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(vx, vy, 14, vToA2, vToA1);
+    ctx.stroke();
+
+    // Same intercepted arc
     ctx.strokeStyle = '#10b981';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(cx2, cy2, r, ia2, ia1);
     ctx.stroke();
 
+    // Vertex dot
+    ctx.fillStyle = '#a855f7';
+    ctx.beginPath();
+    ctx.arc(vx, vy, 3, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#a855f7';
-    ctx.fillText('α', vx + 12, vy - 2);
+    ctx.fillText('40°', vx + 16, vy - 4);
     ctx.fillStyle = '#10b981';
-    ctx.fillText('α = ½ arc', cx2, 38);
+    ctx.fillText('same arc = 80°', cx2, 38);
 }
 
 // ===== Topic 13: Area & Volume =====
 
 function drawReviewDiagram13a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // 2D shapes with dimensions
     const shapes = [
         { name: 'Rectangle', x: w * 0.14 },
         { name: 'Triangle', x: w * 0.38 },
@@ -1831,7 +1960,7 @@ function drawReviewDiagram13a(canvas) {
     ctx.lineTo(sx + tBase * 0.1, cy - tH / 2);
     ctx.closePath();
     ctx.stroke();
-    // Height line
+    // Height dashed line
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 3]);
@@ -1859,7 +1988,7 @@ function drawReviewDiagram13a(canvas) {
     ctx.lineTo(sx - sw / 2 - pSkew, cy + sh / 2);
     ctx.closePath();
     ctx.stroke();
-    // Height
+    // Height dashed line
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 3]);
@@ -1898,7 +2027,6 @@ function drawReviewDiagram13a(canvas) {
 
 function drawReviewDiagram13b(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // 3D shapes
     ctx.font = 'bold 12px system-ui';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#e2e8f0';
@@ -1911,18 +2039,13 @@ function drawReviewDiagram13b(canvas) {
     const bw = 50, bh2 = 40, bd = 20;
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2;
-    // Front face
-    ctx.beginPath();
-    ctx.rect(bx - bw / 2, cy - bh2 / 2, bw, bh2);
-    ctx.stroke();
-    // Top face
+    ctx.beginPath(); ctx.rect(bx - bw / 2, cy - bh2 / 2, bw, bh2); ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(bx - bw / 2, cy - bh2 / 2);
     ctx.lineTo(bx - bw / 2 + bd, cy - bh2 / 2 - bd * 0.6);
     ctx.lineTo(bx + bw / 2 + bd, cy - bh2 / 2 - bd * 0.6);
     ctx.lineTo(bx + bw / 2, cy - bh2 / 2);
     ctx.stroke();
-    // Right face
     ctx.beginPath();
     ctx.moveTo(bx + bw / 2, cy - bh2 / 2);
     ctx.lineTo(bx + bw / 2 + bd, cy - bh2 / 2 - bd * 0.6);
@@ -1937,23 +2060,10 @@ function drawReviewDiagram13b(canvas) {
     const cylX = w * 0.38, cylR = 28, cylH = 55;
     ctx.strokeStyle = '#818cf8';
     ctx.lineWidth = 2;
-    // Top ellipse
-    ctx.beginPath();
-    ctx.ellipse(cylX, cy - cylH / 2 + 8, cylR, 10, 0, 0, Math.PI * 2);
-    ctx.stroke();
-    // Bottom ellipse
-    ctx.beginPath();
-    ctx.ellipse(cylX, cy + cylH / 2 - 5, cylR, 10, 0, 0, Math.PI);
-    ctx.stroke();
-    // Sides
-    ctx.beginPath();
-    ctx.moveTo(cylX - cylR, cy - cylH / 2 + 8);
-    ctx.lineTo(cylX - cylR, cy + cylH / 2 - 5);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(cylX + cylR, cy - cylH / 2 + 8);
-    ctx.lineTo(cylX + cylR, cy + cylH / 2 - 5);
-    ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cylX, cy - cylH / 2 + 8, cylR, 10, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cylX, cy + cylH / 2 - 5, cylR, 10, 0, 0, Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cylX - cylR, cy - cylH / 2 + 8); ctx.lineTo(cylX - cylR, cy + cylH / 2 - 5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cylX + cylR, cy - cylH / 2 + 8); ctx.lineTo(cylX + cylR, cy + cylH / 2 - 5); ctx.stroke();
     ctx.font = '10px system-ui';
     ctx.fillStyle = '#fbbf24';
     ctx.fillText('r', cylX + 5, cy - cylH / 2 + 6);
@@ -1965,16 +2075,10 @@ function drawReviewDiagram13b(canvas) {
     const coneX = w * 0.62, coneR = 28, coneH = 60;
     ctx.strokeStyle = '#a855f7';
     ctx.lineWidth = 2;
-    // Base ellipse
-    ctx.beginPath();
-    ctx.ellipse(coneX, cy + coneH / 2 - 8, coneR, 10, 0, 0, Math.PI);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.setLineDash([3, 3]);
-    ctx.ellipse(coneX, cy + coneH / 2 - 8, coneR, 10, 0, Math.PI, Math.PI * 2);
-    ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(coneX, cy + coneH / 2 - 8, coneR, 10, 0, 0, Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.setLineDash([3, 3]);
+    ctx.ellipse(coneX, cy + coneH / 2 - 8, coneR, 10, 0, Math.PI, Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
-    // Sides
     ctx.beginPath();
     ctx.moveTo(coneX - coneR, cy + coneH / 2 - 8);
     ctx.lineTo(coneX, cy - coneH / 2 + 5);
@@ -1988,22 +2092,14 @@ function drawReviewDiagram13b(canvas) {
     const sphX = w * 0.86, sphR = 30;
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(sphX, cy, sphR, 0, Math.PI * 2);
-    ctx.stroke();
-    // Equator ellipse
-    ctx.beginPath();
-    ctx.setLineDash([3, 3]);
-    ctx.ellipse(sphX, cy, sphR, 10, 0, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(sphX, cy, sphR, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.setLineDash([3, 3]);
+    ctx.ellipse(sphX, cy, sphR, 10, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
     // Radius line
     ctx.strokeStyle = '#e2e8f0';
     ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(sphX, cy);
-    ctx.lineTo(sphX + sphR, cy);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sphX, cy); ctx.lineTo(sphX + sphR, cy); ctx.stroke();
     ctx.font = '10px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('r', sphX + sphR / 2, cy - 6);
@@ -2015,7 +2111,6 @@ function drawReviewDiagram13b(canvas) {
 
 function drawReviewDiagram14a(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Coordinate plane with distance formula
     const margin = 45;
     const ox = margin + 10, oy = h - margin;
     const axW = w - margin * 2, axH = h - margin * 1.5;
@@ -2028,35 +2123,23 @@ function drawReviewDiagram14a(canvas) {
     // Axes
     ctx.strokeStyle = '#334155';
     ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(ox, oy);
-    ctx.lineTo(ox + axW, oy);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(ox, oy);
-    ctx.lineTo(ox, oy - axH);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + axW, oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - axH); ctx.stroke();
 
-    // Grid lines (light)
+    // Light grid
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 0.5;
     const gridStep = axW / 8;
     for (let i = 1; i <= 8; i++) {
-        ctx.beginPath();
-        ctx.moveTo(ox + i * gridStep, oy);
-        ctx.lineTo(ox + i * gridStep, oy - axH);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(ox, oy - i * gridStep);
-        ctx.lineTo(ox + axW, oy - i * gridStep);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ox + i * gridStep, oy); ctx.lineTo(ox + i * gridStep, oy - axH); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ox, oy - i * gridStep); ctx.lineTo(ox + axW, oy - i * gridStep); ctx.stroke();
     }
 
     // Two points
     const p1x = ox + 2 * gridStep, p1y = oy - 2 * gridStep;
     const p2x = ox + 6 * gridStep, p2y = oy - 6 * gridStep;
 
-    // Dashed lines for right triangle
+    // Right triangle dashed lines showing dx, dy
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
     ctx.setLineDash([5, 4]);
@@ -2067,7 +2150,7 @@ function drawReviewDiagram14a(canvas) {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Distance line
+    // Distance line (hypotenuse)
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
@@ -2077,19 +2160,13 @@ function drawReviewDiagram14a(canvas) {
 
     // Points
     ctx.fillStyle = '#fbbf24';
-    ctx.beginPath();
-    ctx.arc(p1x, p1y, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(p2x, p2y, 5, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(p1x, p1y, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(p2x, p2y, 5, 0, Math.PI * 2); ctx.fill();
 
     // Midpoint
     const mx = (p1x + p2x) / 2, my = (p1y + p2y) / 2;
     ctx.fillStyle = '#10b981';
-    ctx.beginPath();
-    ctx.arc(mx, my, 4, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(mx, my, 4, 0, Math.PI * 2); ctx.fill();
 
     // Labels
     ctx.font = '11px system-ui';
@@ -2098,17 +2175,16 @@ function drawReviewDiagram14a(canvas) {
     ctx.fillText('(x₁, y₁)', p1x - 5, p1y + 18);
     ctx.fillText('(x₂, y₂)', p2x + 8, p2y + 4);
     ctx.fillStyle = '#10b981';
-    ctx.fillText('M', mx + 6, my - 6);
+    ctx.fillText('midpoint', mx + 6, my - 8);
 
     ctx.fillStyle = '#94a3b8';
     ctx.textAlign = 'center';
     ctx.fillText('Δx', (p1x + p2x) / 2, p1y + 16);
-    ctx.fillText('Δy', p2x + 14, (p1y + p2y) / 2);
+    ctx.fillText('Δy', p2x + 16, (p1y + p2y) / 2);
 }
 
 function drawReviewDiagram14b(canvas) {
     const { ctx, w, h } = setupReviewCanvas(canvas);
-    // Parallel and perpendicular lines
     ctx.font = 'bold 12px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.textAlign = 'center';
@@ -2116,7 +2192,7 @@ function drawReviewDiagram14b(canvas) {
 
     const halfW = w / 2;
 
-    // Parallel lines (left side)
+    // === Parallel lines (left side) ===
     ctx.font = 'bold 11px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('Parallel', halfW * 0.5, 38);
@@ -2140,29 +2216,31 @@ function drawReviewDiagram14b(canvas) {
     ctx.textAlign = 'left';
     ctx.fillText('m = 2/3', halfW - 30, h * 0.3 - 5);
     ctx.fillStyle = '#a855f7';
-    ctx.fillText('m = 2/3', halfW - 0, h * 0.4 - 5);
+    ctx.fillText('m = 2/3', halfW, h * 0.4 - 5);
     ctx.fillStyle = '#fbbf24';
     ctx.textAlign = 'center';
     ctx.fillText('m₁ = m₂', halfW * 0.5, h - 12);
 
-    // Perpendicular lines (right side)
+    // === Perpendicular lines (right side) ===
     ctx.font = 'bold 11px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('Perpendicular', halfW * 1.5, 38);
 
     const pcx = halfW * 1.5, pcy = h * 0.55;
+    // Line 1: slope 3/4 (rise 3, run 4)
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(pcx - 70, pcy + 45);
-    ctx.lineTo(pcx + 70, pcy - 45);
+    ctx.moveTo(pcx - 70, pcy + 52.5);
+    ctx.lineTo(pcx + 70, pcy - 52.5);
     ctx.stroke();
 
+    // Line 2: slope -4/3 (perpendicular)
     ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(pcx - 55, pcy - 35);
-    ctx.lineTo(pcx + 55, pcy + 35);
+    ctx.moveTo(pcx - 50, pcy - 66.7);
+    ctx.lineTo(pcx + 50, pcy + 66.7);
     ctx.stroke();
 
     // Right angle square at intersection
@@ -2170,9 +2248,9 @@ function drawReviewDiagram14b(canvas) {
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(pcx + sq, pcy - sq * 0.6);
-    ctx.lineTo(pcx + sq + sq * 0.6, pcy + sq * 0.1);
-    ctx.lineTo(pcx + sq * 0.6, pcy + sq * 0.7);
+    ctx.moveTo(pcx + sq, pcy - sq * 0.75);
+    ctx.lineTo(pcx + sq + sq * 0.75, pcy + sq * 0.15);
+    ctx.lineTo(pcx + sq * 0.75, pcy + sq * 0.9);
     ctx.stroke();
 
     ctx.font = '11px system-ui';
@@ -2180,7 +2258,7 @@ function drawReviewDiagram14b(canvas) {
     ctx.textAlign = 'left';
     ctx.fillText('m = 3/4', pcx + 50, pcy - 50);
     ctx.fillStyle = '#10b981';
-    ctx.fillText('m = −4/3', pcx + 40, pcy + 50);
+    ctx.fillText('m = −4/3', pcx + 40, pcy + 55);
     ctx.fillStyle = '#fbbf24';
     ctx.textAlign = 'center';
     ctx.fillText('m₁ · m₂ = −1', halfW * 1.5, h - 12);
@@ -2197,19 +2275,19 @@ function drawReviewDiagram15a(canvas) {
 
     const thirdW = w / 3;
 
-    // Translation
+    // === Translation ===
     ctx.font = '11px system-ui';
     ctx.fillStyle = '#e2e8f0';
     ctx.textAlign = 'center';
     ctx.fillText('Translation', thirdW * 0.5, 36);
 
     const tOrig = [
-        [thirdW * 0.2, h * 0.4],
-        [thirdW * 0.2, h * 0.7],
-        [thirdW * 0.55, h * 0.7],
-        [thirdW * 0.55, h * 0.4]
+        [thirdW * 0.15, h * 0.42],
+        [thirdW * 0.15, h * 0.72],
+        [thirdW * 0.55, h * 0.72],
+        [thirdW * 0.55, h * 0.42]
     ];
-    const tShift = 30;
+    const tShift = 32, tShiftY = -22;
     // Original
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2;
@@ -2217,48 +2295,49 @@ function drawReviewDiagram15a(canvas) {
     tOrig.forEach((p, i) => i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]));
     ctx.closePath();
     ctx.stroke();
-
     // Translated
     ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    tOrig.forEach((p, i) => i === 0 ? ctx.moveTo(p[0] + tShift, p[1] - 20) : ctx.lineTo(p[0] + tShift, p[1] - 20));
+    tOrig.forEach((p, i) => i === 0 ? ctx.moveTo(p[0] + tShift, p[1] + tShiftY) : ctx.lineTo(p[0] + tShift, p[1] + tShiftY));
     ctx.closePath();
     ctx.stroke();
-
     // Arrow
+    const arrowStartX = tOrig[3][0] + 4, arrowStartY = tOrig[3][1] + 2;
+    const arrowEndX = tOrig[3][0] + tShift - 4, arrowEndY = tOrig[3][1] + tShiftY - 2;
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(tOrig[0][0] + 5, tOrig[0][1] - 3);
-    ctx.lineTo(tOrig[0][0] + tShift - 3, tOrig[0][1] - 18);
+    ctx.moveTo(arrowStartX, arrowStartY);
+    ctx.lineTo(arrowEndX, arrowEndY);
     ctx.stroke();
     // Arrowhead
+    const aAngle = Math.atan2(arrowEndY - arrowStartY, arrowEndX - arrowStartX);
     ctx.fillStyle = '#fbbf24';
     ctx.beginPath();
-    ctx.moveTo(tOrig[0][0] + tShift - 3, tOrig[0][1] - 18);
-    ctx.lineTo(tOrig[0][0] + tShift - 10, tOrig[0][1] - 14);
-    ctx.lineTo(tOrig[0][0] + tShift - 7, tOrig[0][1] - 22);
+    ctx.moveTo(arrowEndX, arrowEndY);
+    ctx.lineTo(arrowEndX - 8 * Math.cos(aAngle - 0.4), arrowEndY - 8 * Math.sin(aAngle - 0.4));
+    ctx.lineTo(arrowEndX - 8 * Math.cos(aAngle + 0.4), arrowEndY - 8 * Math.sin(aAngle + 0.4));
     ctx.fill();
 
-    // Reflection
+    // === Reflection ===
     ctx.fillStyle = '#e2e8f0';
     ctx.font = '11px system-ui';
     ctx.textAlign = 'center';
     ctx.fillText('Reflection', thirdW * 1.5, 36);
 
-    // Y-axis (mirror line)
+    // Mirror line (vertical)
     const mirrorX = thirdW * 1.5;
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 4]);
     ctx.beginPath();
-    ctx.moveTo(mirrorX, h * 0.28);
+    ctx.moveTo(mirrorX, h * 0.3);
     ctx.lineTo(mirrorX, h * 0.85);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Original triangle
+    // Original triangle (left of mirror)
     const rTri = [
         [mirrorX - 50, h * 0.45],
         [mirrorX - 15, h * 0.45],
@@ -2271,7 +2350,7 @@ function drawReviewDiagram15a(canvas) {
     ctx.closePath();
     ctx.stroke();
 
-    // Reflected triangle
+    // Reflected triangle (right of mirror)
     ctx.strokeStyle = '#a855f7';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -2282,7 +2361,7 @@ function drawReviewDiagram15a(canvas) {
     ctx.closePath();
     ctx.stroke();
 
-    // Rotation
+    // === Rotation ===
     ctx.fillStyle = '#e2e8f0';
     ctx.font = '11px system-ui';
     ctx.textAlign = 'center';
@@ -2323,18 +2402,27 @@ function drawReviewDiagram15a(canvas) {
     ctx.arc(rotCx, rotCy, 3, 0, Math.PI * 2);
     ctx.fill();
 
-    // Curved arrow
+    // Curved arrow indicating rotation
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.arc(rotCx, rotCy, 20, -Math.PI * 0.3, Math.PI * 0.2, false);
+    ctx.arc(rotCx, rotCy, 18, -Math.PI * 0.35, Math.PI * 0.15, false);
     ctx.stroke();
+    // Arrowhead on curved arrow
+    const curveEndAngle = Math.PI * 0.15;
+    const curveEndX = rotCx + 18 * Math.cos(curveEndAngle);
+    const curveEndY = rotCy + 18 * Math.sin(curveEndAngle);
+    ctx.fillStyle = '#94a3b8';
+    ctx.beginPath();
+    ctx.moveTo(curveEndX, curveEndY);
+    ctx.lineTo(curveEndX - 5, curveEndY - 6);
+    ctx.lineTo(curveEndX + 5, curveEndY - 4);
+    ctx.fill();
 }
 
 // ===== Init function =====
 
 function initReviewCanvases(num) {
-    // Small delay to allow DOM to render and get proper dimensions
     setTimeout(() => {
         const drawFunctions = {
             '7a': drawReviewDiagram7a,
@@ -2355,7 +2443,6 @@ function initReviewCanvases(num) {
             '15a': drawReviewDiagram15a
         };
 
-        // Find all canvases for this topic number
         Object.keys(drawFunctions).forEach(key => {
             if (key.startsWith(String(num))) {
                 const canvas = document.getElementById('reviewCanvas-' + key);
@@ -2385,7 +2472,6 @@ function showReviewTopic(num) {
     document.getElementById('reviewContent').scrollTop = 0;
     window.scrollTo(0, 0);
 
-    // Initialize canvas diagrams for geometry topics
     if (num >= 7 && num <= 15) {
         initReviewCanvases(num);
     }
