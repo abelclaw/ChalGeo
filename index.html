@@ -2077,36 +2077,42 @@
         function toDeg(rad) { return rad * 180 / Math.PI; }
 
         function trigFn(fn) {
-            const numStr = expression || '0';
-            let val = parseFloat(numStr);
-            if (isNaN(val)) { updateDisplay('Error'); return; }
-            let result;
-            switch(fn) {
-                case 'sin': result = Math.sin(angleMode === 'deg' ? toRad(val) : val); break;
-                case 'cos': result = Math.cos(angleMode === 'deg' ? toRad(val) : val); break;
-                case 'tan': result = Math.tan(angleMode === 'deg' ? toRad(val) : val); break;
-                case 'asin':
-                    if (val < -1 || val > 1) { updateDisplay('Error: domain'); return; }
-                    result = Math.asin(val); if (angleMode === 'deg') result = toDeg(result); break;
-                case 'acos':
-                    if (val < -1 || val > 1) { updateDisplay('Error: domain'); return; }
-                    result = Math.acos(val); if (angleMode === 'deg') result = toDeg(result); break;
-                case 'atan':
-                    result = Math.atan(val); if (angleMode === 'deg') result = toDeg(result); break;
-                case 'sec': result = 1 / Math.cos(angleMode === 'deg' ? toRad(val) : val); break;
-                case 'csc': result = 1 / Math.sin(angleMode === 'deg' ? toRad(val) : val); break;
-                case 'cot': result = 1 / Math.tan(angleMode === 'deg' ? toRad(val) : val); break;
-                case 'asec':
-                    if (val > -1 && val < 1) { updateDisplay('Error: domain'); return; }
-                    result = Math.acos(1/val); if (angleMode === 'deg') result = toDeg(result); break;
-                case 'acsc':
-                    if (val > -1 && val < 1) { updateDisplay('Error: domain'); return; }
-                    result = Math.asin(1/val); if (angleMode === 'deg') result = toDeg(result); break;
-                case 'acot':
-                    result = Math.atan(1/val); if (angleMode === 'deg') result = toDeg(result); break;
+            // If expression is empty or a plain number, evaluate immediately
+            var numStr = expression || '0';
+            var val = parseFloat(numStr);
+            if (!isNaN(val) && numStr === val.toString()) {
+                var result;
+                switch(fn) {
+                    case 'sin': result = Math.sin(angleMode === 'deg' ? toRad(val) : val); break;
+                    case 'cos': result = Math.cos(angleMode === 'deg' ? toRad(val) : val); break;
+                    case 'tan': result = Math.tan(angleMode === 'deg' ? toRad(val) : val); break;
+                    case 'asin':
+                        if (val < -1 || val > 1) { updateDisplay('Error: domain'); return; }
+                        result = Math.asin(val); if (angleMode === 'deg') result = toDeg(result); break;
+                    case 'acos':
+                        if (val < -1 || val > 1) { updateDisplay('Error: domain'); return; }
+                        result = Math.acos(val); if (angleMode === 'deg') result = toDeg(result); break;
+                    case 'atan':
+                        result = Math.atan(val); if (angleMode === 'deg') result = toDeg(result); break;
+                    case 'sec': result = 1 / Math.cos(angleMode === 'deg' ? toRad(val) : val); break;
+                    case 'csc': result = 1 / Math.sin(angleMode === 'deg' ? toRad(val) : val); break;
+                    case 'cot': result = 1 / Math.tan(angleMode === 'deg' ? toRad(val) : val); break;
+                    case 'asec':
+                        if (val > -1 && val < 1) { updateDisplay('Error: domain'); return; }
+                        result = Math.acos(1/val); if (angleMode === 'deg') result = toDeg(result); break;
+                    case 'acsc':
+                        if (val > -1 && val < 1) { updateDisplay('Error: domain'); return; }
+                        result = Math.asin(1/val); if (angleMode === 'deg') result = toDeg(result); break;
+                    case 'acot':
+                        result = Math.atan(1/val); if (angleMode === 'deg') result = toDeg(result); break;
+                }
+                expression = formatNum(result);
+                updateDisplay(expression);
+            } else {
+                // Insert function into expression (e.g. "12/tan(")
+                expression += fn + '(';
+                updateDisplay(expression);
             }
-            expression = formatNum(result);
-            updateDisplay(expression);
         }
 
         function formatNum(n) {
@@ -2117,6 +2123,23 @@
         function calculate() {
             try {
                 let expr = expression.replace(/\^/g, '**');
+                // Support trig functions in expressions
+                var _d = (angleMode === 'deg');
+                // Replace longest names first to avoid partial matches (asin before sin, etc.)
+                expr = expr.replace(/asec\(([^)]+)\)/g, function(_, a) { return (_d ? '180/Math.PI*' : '') + 'Math.acos(1/(' + a + '))'; });
+                expr = expr.replace(/acsc\(([^)]+)\)/g, function(_, a) { return (_d ? '180/Math.PI*' : '') + 'Math.asin(1/(' + a + '))'; });
+                expr = expr.replace(/acot\(([^)]+)\)/g, function(_, a) { return (_d ? '180/Math.PI*' : '') + 'Math.atan(1/(' + a + '))'; });
+                expr = expr.replace(/asin\(([^)]+)\)/g, function(_, a) { return (_d ? '180/Math.PI*' : '') + 'Math.asin(' + a + ')'; });
+                expr = expr.replace(/acos\(([^)]+)\)/g, function(_, a) { return (_d ? '180/Math.PI*' : '') + 'Math.acos(' + a + ')'; });
+                expr = expr.replace(/atan\(([^)]+)\)/g, function(_, a) { return (_d ? '180/Math.PI*' : '') + 'Math.atan(' + a + ')'; });
+                expr = expr.replace(/sec\(([^)]+)\)/g, function(_, a) { return '(1/Math.cos(' + (_d ? 'Math.PI/180*(' + a + ')' : a) + '))'; });
+                expr = expr.replace(/csc\(([^)]+)\)/g, function(_, a) { return '(1/Math.sin(' + (_d ? 'Math.PI/180*(' + a + ')' : a) + '))'; });
+                expr = expr.replace(/cot\(([^)]+)\)/g, function(_, a) { return '(1/Math.tan(' + (_d ? 'Math.PI/180*(' + a + ')' : a) + '))'; });
+                expr = expr.replace(/sin\(([^)]+)\)/g, function(_, a) { return 'Math.sin(' + (_d ? 'Math.PI/180*(' + a + ')' : a) + ')'; });
+                expr = expr.replace(/cos\(([^)]+)\)/g, function(_, a) { return 'Math.cos(' + (_d ? 'Math.PI/180*(' + a + ')' : a) + ')'; });
+                expr = expr.replace(/tan\(([^)]+)\)/g, function(_, a) { return 'Math.tan(' + (_d ? 'Math.PI/180*(' + a + ')' : a) + ')'; });
+                expr = expr.replace(/sqrt\(([^)]+)\)/g, 'Math.sqrt($1)');
+                expr = expr.replace(/pi/g, 'Math.PI');
                 let result = Function('"use strict"; return (' + expr + ')')();
                 expression = formatNum(result);
                 updateDisplay(expression);
